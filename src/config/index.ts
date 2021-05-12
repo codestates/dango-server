@@ -13,4 +13,5 @@ if (envFound.error) {
 export default {
   port: parseInt(process.env.PORT!),
   databaseURL: process.env.MONGO_URI,
+  clientURL:process.env.DEFAULT_URL,
 };
