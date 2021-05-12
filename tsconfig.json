@@ -6,10 +6,10 @@
     "outDir": "./dist",
     "strict": true,
     "moduleResolution": "node",
-    "baseUrl": ".",
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    // "typeRoots":["./node_modules/@types", "src/@types"],
   },
   "include": ["src/**/*"]
 }
