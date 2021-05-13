@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import { Db } from "mongodb";
 import config from "../config/index";
-import userModel from "../models/user";
+import UserModel from "../models/user";
 
 export default async (): Promise<Db> => {
   const connection = await mongoose.connect(config.databaseURL!, {
@@ -9,9 +9,10 @@ export default async (): Promise<Db> => {
     useCreateIndex: true,
     useUnifiedTopology: true,
   });
-  const userdoc = new userModel({
+  const userdoc = new UserModel({
     nickname:"TestUser",
     socialData:{
+      id:1679231556,
       name:"username",
       email:"qwer@qwer.qw",
       image:"https://placeimg.com/120/120/people/grayscale"
