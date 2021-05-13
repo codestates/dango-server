@@ -30,6 +30,12 @@ export default class KakaoAuth {
       },
     }).then((res:AxiosResponse)=>res.data);
   }
-  static async signUp() {}
+  static async signOut(token: string) {
+    return axios.post('https://kapi.kakao.com/v2/user/logout', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }).then((res:AxiosResponse)=>res.data);
+  }
   static async withdraw() {}
 }
