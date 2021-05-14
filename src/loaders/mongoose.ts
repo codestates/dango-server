@@ -13,6 +13,7 @@ export default async (): Promise<Db> => {
     nickname:"TestUser",
     socialData:{
       id:1679231556,
+      type:"kakao",
       name:"username",
       email:"qwer@qwer.qw",
       image:"https://placeimg.com/120/120/people/grayscale"
