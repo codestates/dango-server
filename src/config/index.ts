@@ -17,5 +17,7 @@ export default {
   kakaoAdminKey:process.env.KAKAO_ADMIN_KEY!,
   kakaoRestAPIKey:process.env.KAKAO_REST_APIKEY!,
   redirectURI:process.env.REDIRECT_URI!,
-  defaultImage:process.env.DEFAULT_USER_IMAGE
+  defaultImage:process.env.DEFAULT_USER_IMAGE,
+  googleSecret:process.env.GOOGLE_SECRET,
+  googleClientKey:process.env.GOOGLE_CLIENT_ID,
 };

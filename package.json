@@ -45,6 +45,7 @@
     "cors": "^2.8.5",
     "dotenv": "^9.0.2",
     "express": "^4.17.1",
+    "google-auth-library": "^7.0.4",
     "mongoose": "^5.12.8",
     "socket.io": "^4.1.1"
   }

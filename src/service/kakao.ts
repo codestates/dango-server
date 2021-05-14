@@ -52,7 +52,6 @@ export default class KakaoAuth {
         },
       })
       .then((res: AxiosResponse) => {
-        console.log(res);
         return res.data;
       })
       .catch((e) => e);

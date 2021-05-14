@@ -1,13 +1,8 @@
-import { Router, Request, Response } from 'express';
+import { Router } from 'express';
+import { signin } from '../../controller/users/google/index';
+
 const router = Router();
 
-router.get('/signup',(req:Request, res:Response)=>{
-  console.log(1);
-  res.send('123');
-})
-
-
-
-
+router.post('/signin', signin);
 
 export default router;
