@@ -3,7 +3,7 @@ import UserModel from '../../../../models/user';
 import KakaoAuth from '../../../../service/kakao';
 
 export default async (req: Request, res: Response) => {
-  const accessToken: string = req.body.accessToken;
+  const accessToken: string = req.headers.authorization?.split(' ')[1]!;
   try {
     // 유저정보 받아오고
     const data = await KakaoAuth.getUserInfo(accessToken);

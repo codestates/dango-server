@@ -4,7 +4,7 @@ import UserModel from '../../../../models/user';
 import KakaoAuth from '../../../../service/kakao';
 
 export default async (req: Request, res: Response) => {
-  const accessToken: string = req.body.accessToken;
+  const accessToken: string = req.headers.authorization?.split(' ')[1]!;
   try {
     const result = await KakaoAuth.signOut(accessToken);
     if (result) {

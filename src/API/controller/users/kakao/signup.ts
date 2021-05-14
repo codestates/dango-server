@@ -5,7 +5,7 @@ import KakaoAuth from '../../../../service/kakao';
 import config from '../../../../config';
 
 export default async (req: Request, res: Response) => {
-  const accessToken: string = req.body.accessToken;
+  const accessToken: string = req.headers.authorization?.split(' ')[1]!;
   const nickname: string = req.body.nickname;
   try {
     // 이미 로그인 요청을 통해 회원정보가 없다는 것이 확인된 상태
