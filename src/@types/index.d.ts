@@ -1,11 +1,15 @@
 // example
 
+// mongoose schema
 export interface User {
-  name: string;
-  age: number;
-}
-
-export interface abc {
-  name: string;
-  age: number;
+  nickname: string;
+  socialData: {
+    id: number;
+    social: string;
+    name: string;
+    email: string;
+    image: string;
+  };
+  selling: string[];
+  bought: string[];
 }

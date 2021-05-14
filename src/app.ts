@@ -8,12 +8,12 @@ const app = express();
 require('./loaders/express').default({ app });
 
 // mongoose
-mongoose().then(()=>{
+mongoose().then(() => {
   console.log('database connected');
-})
+});
 
 // route
-app.use('/users', route.users)
+app.use('/users', route.users);
 
 app.get('/', (req: Request, res: Response) => {
   res.send({ message: 'hello world!' });

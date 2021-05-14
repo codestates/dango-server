@@ -15,5 +15,8 @@ export default (req: Request, res: Response, next: NextFunction) => {
 
   console.log('\n::::::req.cookies::::::');
   console.log(req.cookies);
+
+  console.log('\n::::::requested url::::::');
+  console.log(req.originalUrl);
   next();
 };
