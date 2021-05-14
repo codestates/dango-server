@@ -5,7 +5,7 @@ const schema = new Schema<User>({
   nickname: { type: String, required: true, unique: true },
   socialData: {
     id: { type: Number, required: false, unique: true },
-    type: { type: String, required: true },
+    social: { type: String, required: true },
     name: { type: String, required: false },
     email: { type: String, required: false, unique: true },
     image: { type: String, required: false },

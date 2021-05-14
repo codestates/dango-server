@@ -5,7 +5,7 @@ export interface User {
   nickname: string;
   socialData: {
     id: number;
-    type: string;
+    social: string;
     name: string;
     email: string;
     image: string;

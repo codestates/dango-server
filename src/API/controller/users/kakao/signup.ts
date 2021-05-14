@@ -28,7 +28,7 @@ export default async (req: Request, res: Response) => {
           nickname,
           socialData: {
             id,
-            type: 'kakao',
+            social: 'kakao',
             name: properties && properties.nickname,
             email: email,
             image: config.defaultImage,

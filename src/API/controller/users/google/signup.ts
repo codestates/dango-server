@@ -22,7 +22,7 @@ export default async (req: Request, res: Response) => {
             nickname,
             socialData: {
               id: userData.sub,
-              type: 'google',
+              social: 'google',
               name: userData.name,
               email: userData.email,
               image: userData.picture || config.defaultImage,
