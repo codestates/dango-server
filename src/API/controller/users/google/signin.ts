@@ -1,4 +1,3 @@
-import { GooglePayload } from './../../../../@types/google.d';
 import { Request, Response } from 'express';
 import UserModel from '../../../../models/user';
 import GoogleAuth from '../../../../service/google';
@@ -19,27 +18,7 @@ export default async (req: Request, res: Response) => {
       res.status(401).send({ message: '유효하지 않은 토큰입니다.' });
     }
   } catch (err) {
-    console.log(err);
-    res.send('err');
+    res.status(500).send({message:"서버 응답에 실패했습니다."});
   }
 };
 
-/**
- *  {
-  iss: 'accounts.google.com',
-  azp: '968179737316-gj1srqd2qki48du5bqgnpu9ffq825c39.apps.googleusercontent.com',
-  aud: '968179737316-gj1srqd2qki48du5bqgnpu9ffq825c39.apps.googleusercontent.com',
-  sub: '103179440432725431001',
-  email: 'jjooh10@naver.com',
-  email_verified: true,
-  at_hash: '00YI9MeK2sSz-Guv3HjAcw',
-  name: 'Juhyeon Ji',
-  picture: 'https://lh3.googleusercontent.com/a-/AOh14GiOxRT8w6zDU9gEM6MBg_5wPEAMDaCCTdqpItPF=s96-c',
-  given_name: 'Juhyeon',
-  family_name: 'Ji',
-  locale: 'ko',
-  iat: 1620990095,
-  exp: 1620993695,
-  jti: 'f01194a6d18753d7cdac5c9993a418367fd76d20'
-}
- */

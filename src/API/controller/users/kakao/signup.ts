@@ -16,21 +16,14 @@ export default async (req: Request, res: Response) => {
     } else {
       // 카카오 정보요청
       const data: KakaoUserInfo = await KakaoAuth.getUserInfo(accessToken);
-      const {
-        id,
-        properties,
-        kakao_account: {
-          // has_email,
-          // email_needs_agreement,
-          // is_email_valid,
-          // is_email_verified,
-          email,
-          // has_gender,
-          // gender_needs_agreement,
-          // gender,
-        },
-      } = data;
       if (data) {
+        const {
+          id,
+          properties,
+          kakao_account: {
+            email,
+          },
+        } = data;
         const newUser = new UserModel({
           nickname,
           socialData: {
@@ -42,7 +35,7 @@ export default async (req: Request, res: Response) => {
           },
         });
         await newUser.save();
-        res.send({ message: '회원가입에 성공했습니다.' });
+        res.send({ message: '회원가입에 성공했습니다.',  });
       } else {
         res.status(401).send({ message: '유효하지 않은 토큰입니다.' });
       }
