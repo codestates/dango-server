@@ -37,5 +37,11 @@ export default class KakaoAuth {
       },
     }).then((res:AxiosResponse)=>res.data);
   }
-  static async withdraw() {}
+  static async withdraw(token: string) {
+    return axios.post('https://kapi.kakao.com/v1/user/unlink', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }).then((res:AxiosResponse)=>res.data);
+  }
 }

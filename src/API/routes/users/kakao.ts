@@ -1,15 +1,12 @@
-import { Router, Request, Response } from 'express';
-import a from '../../controller/users/kakao/signin';
+import { Router } from 'express';
+import { signin, signup, signout } from '../../controller/users/kakao/index';
 
 const router = Router();
 
-router.get('/signup',(req:Request, res:Response)=>{
-  console.log(1);
-  res.send('123');
-})
+router.get('/signup', signup);
 
-router.get('/signin',a)
+router.get('/signin', signin);
 
-
+router.get('/signout', signout);
 
 export default router;

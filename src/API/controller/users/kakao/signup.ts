@@ -35,7 +35,7 @@ export default async (req: Request, res: Response) => {
           nickname,
           socialData: {
             id,
-            type:"kakao",
+            type: 'kakao',
             name: properties && properties.nickname,
             email: email,
             image: config.defaultImage,
@@ -44,7 +44,7 @@ export default async (req: Request, res: Response) => {
         await newUser.save();
         res.send({ message: '회원가입에 성공했습니다.' });
       } else {
-        res.status(401).send({message:"유효하지 않은 토큰입니다."})
+        res.status(401).send({ message: '유효하지 않은 토큰입니다.' });
       }
     }
   } catch (err) {
