@@ -13,7 +13,7 @@ mongoose().then(() => {
 });
 
 // route
-app.use('/users', route.users, route.kakao);
+app.use('/users', route.users);
 
 app.get('/', (req: Request, res: Response) => {
   res.send({ message: 'hello world!' });
