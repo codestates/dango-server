@@ -4,6 +4,8 @@
 export interface User {
   nickname: string;
   socialData: {
+    id: number;
+    type: string;
     name: string;
     email: string;
     image: string;
@@ -11,9 +13,3 @@ export interface User {
   selling: string[];
   bought: string[];
 }
-
-
-
-
-
-
