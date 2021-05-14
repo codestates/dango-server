@@ -1,5 +1,6 @@
 import { Router } from 'express';
-import { signin, signup, signout, withdraw } from '../../controller/users/kakao/index';
+import { signin, signup, signout } from '../../controller/users/kakao/index';
+import withdraw from '../../controller/users/withdraw';
 
 const router = Router();
 
