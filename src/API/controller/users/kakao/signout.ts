@@ -6,7 +6,7 @@ import KakaoAuth from '../../../../service/kakao';
 export default async (req: Request, res: Response) => {
   const accessToken: string = req.body.accessToken;
   try {
-    const result = KakaoAuth.signOut(accessToken);
+    const result = await KakaoAuth.signOut(accessToken);
     if (result) {
       res.send({ message: '로그아웃에 성공했습니다.' });
     } else {
