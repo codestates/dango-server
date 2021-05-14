@@ -29,8 +29,18 @@ export default async (req: Request, res: Response) => {
             },
           };
           const newUser = new UserModel(userInfo);
-          await newUser.save();
-          res.status(200).send({ message: '회원가입에 성공했습니다.', nickname, userInfo });
+          newUser.save((err, user) => {
+            res.status(200).send({
+              message: '회원가입에 성공했습니다.',
+              _id: user._id,
+              nickname,
+              userInfo: {
+                social: 'google',
+                email: userData.email,
+                image: userData.picture || config.defaultImage,
+              },
+            });
+          });
         }
       } else {
         res.status(401).send({ message: '유효하지 않은 토큰입니다.' });

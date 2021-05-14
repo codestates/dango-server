@@ -12,7 +12,7 @@ export default async (req: Request, res: Response) => {
     // 먼저 nickname이 있는지 확인
     const result = await UserModel.findOne({ nickname: nickname });
     if (result) {
-      res.status(401).send({ message: '이미 존재하는 닉네임 입니다.' });
+      res.status(409).send({ message: '이미 존재하는 닉네임 입니다.' });
     } else {
       // 카카오 정보요청
       const data: KakaoUserInfo = await KakaoAuth.getUserInfo(accessToken);
@@ -20,9 +20,7 @@ export default async (req: Request, res: Response) => {
         const {
           id,
           properties,
-          kakao_account: {
-            email,
-          },
+          kakao_account: { email },
         } = data;
         const newUser = new UserModel({
           nickname,
@@ -34,8 +32,19 @@ export default async (req: Request, res: Response) => {
             image: config.defaultImage,
           },
         });
-        await newUser.save();
-        res.send({ message: '회원가입에 성공했습니다.',  });
+        newUser.save((err, user) => {
+          res.send({
+            message: '회원가입에 성공했습니다.',
+            _id: user._id,
+            accessToken,
+            nickname,
+            userInfo: {
+              social: 'kakao',
+              email: email,
+              image: config.defaultImage,
+            },
+          });
+        });
       } else {
         res.status(401).send({ message: '유효하지 않은 토큰입니다.' });
       }

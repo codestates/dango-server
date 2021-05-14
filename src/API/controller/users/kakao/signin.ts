@@ -11,11 +11,22 @@ export default async (req: Request, res: Response) => {
     const result = await UserModel.findOne({ 'socialData.id': data.id }).select('nickname socialData');
     // 데이터가 있으면 토큰과 닉네임 보내준다.
     if (result) {
-      res.send({ accessToken, nickname: result.nickname, socialData: result.socialData });
+      const { socialData } = result;
+      res.send({
+        message:"회원가입에 성공했습니다.",
+        _id:result._id,
+        accessToken,
+        nickname: result.nickname,
+        userInfo: {
+          image: socialData.image,
+          social: socialData.social,
+          email: socialData.email,
+        },
+      });
     } else {
       res.status(404).send({ message: '회원정보가 없습니다.' });
     }
   } catch (err) {
-    res.status(500).send({ message: '서버오류로 데이터를 불러오지 못했습니다.' });
+    res.status(500).send({ message: '서버응답에 실패했습니다.' });
   }
 };

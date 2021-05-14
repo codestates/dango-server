@@ -22,6 +22,6 @@ export default async (): Promise<Db> => {
     bought:[]
   })
   // 테스트 데이터 생성시 아래 주석을 풀어주세요.
-  await userdoc.save();
+  // await userdoc.save();
   return connection.connection.db;
 };
