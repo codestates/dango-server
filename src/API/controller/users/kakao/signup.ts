@@ -38,7 +38,7 @@ export default async (req: Request, res: Response) => {
             _id: user._id,
             accessToken,
             nickname,
-            userInfo: {
+            socialData: {
               social: 'kakao',
               email: email,
               image: config.defaultImage,

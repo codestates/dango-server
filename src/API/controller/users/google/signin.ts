@@ -14,7 +14,7 @@ export default async (req: Request, res: Response) => {
         res.send({
           message: '로그인에 성공했습니다.',
           _id: result._id,
-          userInfo: {
+          socialData: {
             social,
             email,
             image,

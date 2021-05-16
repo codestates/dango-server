@@ -17,7 +17,7 @@ export default async (req: Request, res: Response) => {
         _id:result._id,
         accessToken,
         nickname: result.nickname,
-        userInfo: {
+        socialData: {
           image: socialData.image,
           social: socialData.social,
           email: socialData.email,

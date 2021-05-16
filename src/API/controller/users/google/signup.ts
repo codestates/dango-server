@@ -34,7 +34,7 @@ export default async (req: Request, res: Response) => {
               message: '회원가입에 성공했습니다.',
               _id: user._id,
               nickname,
-              userInfo: {
+              socialData: {
                 social: 'google',
                 email: userData.email,
                 image: userData.picture || config.defaultImage,
