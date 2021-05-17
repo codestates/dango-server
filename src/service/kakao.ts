@@ -1,4 +1,4 @@
-import { KakaoHeader } from './../@types/kakao.d';
+import { KakaoHeader } from './../@types/service.d';
 import axios, { AxiosResponse } from 'axios';
 import config from '../config/index';
 
