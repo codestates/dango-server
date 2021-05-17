@@ -18,14 +18,14 @@ const schema = new Schema<Talent>({
   ],
   subDetail: { type: String, required: true },
   images: { type: [String], required: false },
-  location: { type: [Number], required: true },
+  location: { type: [Number], required: true,index: '2dsphere' },
   city: { type: String, required: true },
   ratings: { type: [Number], required: true },
   price: { type: Number, required: true },
   category: { type: String, required: true },
   title: { type: String, required: true },
 });
-schema.index({ location: '2dsphere' });
+// schema.index({ location: '2dsphere' });
 
 const TalentModel = model<Talent>('talents', schema);
 
