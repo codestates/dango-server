@@ -23,10 +23,10 @@ export interface Talent {
     required: boolean;
   };
   reviews:Review[] ;
-  subDetail: string;
+  description: string;
   images: string[];
   location: number[];
-  city:string;
+  address:string;
   ratings: number[];
   price: number;
   category: string;

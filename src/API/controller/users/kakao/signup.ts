@@ -1,4 +1,4 @@
-import { KakaoUserInfo } from './../../../../@types/kakao.d';
+import { KakaoUserInfo } from './../../../../@types/service.d';
 import { Request, Response } from 'express';
 import UserModel from '../../../../models/user';
 import KakaoAuth from '../../../../service/kakao';
