@@ -17,7 +17,7 @@ export default async (req: Request, res: Response) => {
     const talentDoc = new TalentModel(talent);
     const result = await talentDoc.save();
     if (result) {
-      // 저장 된 경우 해당 글을 작성한 유저의 selling배열에 talentId 푸쉬      
+      // 저장 된 경우 해당 글을 작성한 유저의 selling배열에 talentId 푸쉬
       const usersResult = await UserModel.updateOne({ _id: result.userInfo }, { $push: { selling: result._id } });
       if (usersResult.ok) {
         // 성공
