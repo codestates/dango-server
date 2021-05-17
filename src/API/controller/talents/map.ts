@@ -4,7 +4,7 @@ import solveMapWidth from '../../../service/coordinates';
 
 export default async (req: Request, res: Response) => {
   const [S, N]: number[] = req.body.width;
-  const [lon, lat]: number[] = req.body.location;
+  const [lat, lon]: number[] = req.body.location; // 쿼리 보낼땐 반대로
   const category: string = req.body.category;
 
   const width = solveMapWidth([S, N]);
@@ -21,7 +21,7 @@ export default async (req: Request, res: Response) => {
     })
       .find({ category })
       .populate('userInfo', 'nickname')
-      .select('location ratings category title')
+      .select('location ratings category title price')
       .lean();
 
     res.json({ result: previewsArr, message: '주변 데이터 불러오기에 성공했습니다.' });
