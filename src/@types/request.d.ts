@@ -1,10 +1,10 @@
 export interface CreateTalent {
-  _id?:string;
+  userId?:string;
   title:string;
   location:number[];
-  roadName:string;
+  address:string;
   category:string;
   price:number;
-  detail:string;
+  description:string;
   images:string[];
 }
