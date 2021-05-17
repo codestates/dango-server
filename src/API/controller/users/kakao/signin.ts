@@ -13,7 +13,7 @@ export default async (req: Request, res: Response) => {
     if (result) {
       const { socialData } = result;
       res.send({
-        message:"회원가입에 성공했습니다.",
+        message:"로그인에 성공했습니다.",
         _id:result._id,
         accessToken,
         nickname: result.nickname,
