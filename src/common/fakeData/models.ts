@@ -1,3 +1,4 @@
+import { ObjectId } from 'mongoose';
 const locations = [
   {
     name: 'some where',
@@ -70,13 +71,14 @@ const fakeTalent = {
       reply: '다음에도 이용해주세요',
     },
   ],
+  userInfo: { $oid: '609ec5a42b6cd4396e5d2bcf' },
   subDetail: 'dnaljsdn',
   images: 'http://pp.pp',
   location: [123, 50],
   city: 'somewhere',
   ratings: [4.3, 7],
   price: 10000,
-  category: 'coding',
+  category: 'lesson',
   title: '코딩 대신 해드립니다.',
 };
 
@@ -93,7 +95,4 @@ const fakeUser = {
   bought: [],
 };
 
-export {
-  fakeTalent,
-  fakeUser,
-};
+export { fakeTalent, fakeUser };
