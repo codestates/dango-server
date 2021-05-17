@@ -1,6 +1,7 @@
 import users from './users/users';
-// import kakao from './users/kakao';
+import talents from './talents';
 
 export default {
   users,
+  talents,
 };
