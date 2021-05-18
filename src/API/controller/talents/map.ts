@@ -5,7 +5,7 @@ import solveMapWidth from '../../../service/coordinates';
 export default async (req: Request, res: Response) => {
   const [S, N]: number[] = req.body.width;
   const [lat, lon]: number[] = req.body.location; // 쿼리 보낼땐 반대로
-  const categorys: string[] = req.body.category;
+  const categorys: string[] = req.body.category || [''];
   const sort: 'price' | 'ratings' | 'review' | undefined = req.body.sort;
   const finalSort = sort === 'price' ? 'price' : sort === 'ratings' ? '-ratings.0' : '-ratings.1' || '';
   const width = solveMapWidth([S, N]);
@@ -21,6 +21,7 @@ export default async (req: Request, res: Response) => {
     })
       .find({
         $or: categorys.sort().map((category) => {
+          if (!category) return {};
           return { category };
         }),
       })
