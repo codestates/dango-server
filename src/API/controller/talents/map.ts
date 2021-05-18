@@ -1,3 +1,4 @@
+import { PopulatedTalent } from './../../../@types/index.d';
 import { Request, Response } from 'express';
 import TalentModel from '../../../models/talents';
 import solveMapWidth from '../../../service/coordinates';
@@ -25,10 +26,17 @@ export default async (req: Request, res: Response) => {
           return { category };
         }),
       })
-      .populate('userInfo', 'nickname')
-      .select('location ratings category title price')
+      .populate({ path: 'userInfo', select: 'nickname socialData' })
+      // .select('location ratings category title price')
+      .select('-__v -reviews')
       .sort(`${finalSort}`)
       .lean();
+
+    previewsArr.map((preview: any) => {
+      delete preview.userInfo.socialData.id;
+      delete preview.userInfo.socialData.social;
+      return preview;
+    });
     res.json({ result: previewsArr, message: '주변 데이터 불러오기에 성공했습니다.' });
   } catch (err) {
     console.log(err);
