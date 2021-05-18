@@ -21,7 +21,7 @@ app.use('/talents',route.talents);
 
 
 app.get('/', (req: Request, res: Response) => {
-  res.send({ message: 'hello world!' });
+  res.send({ message: 'hello ngrok!' });
 });
 
 
