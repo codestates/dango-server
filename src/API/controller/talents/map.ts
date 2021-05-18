@@ -26,15 +26,13 @@ export default async (req: Request, res: Response) => {
           return { category };
         }),
       })
-      .populate({ path: 'userInfo', select: 'nickname socialData' })
+      .populate({ path: 'userInfo', select: 'nickname' })
       // .select('location ratings category title price')
-      .select('-__v -reviews')
+      .select('-__v -reviews -images ')
       .sort(`${finalSort}`)
       .lean();
 
     previewsArr.map((preview: any) => {
-      delete preview.userInfo.socialData.id;
-      delete preview.userInfo.socialData.social;
       return preview;
     });
     res.json({ result: previewsArr, message: '주변 데이터 불러오기에 성공했습니다.' });
@@ -44,4 +42,3 @@ export default async (req: Request, res: Response) => {
   }
 };
 
-// sort : price, ratings, review
