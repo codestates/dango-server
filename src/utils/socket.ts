@@ -52,6 +52,7 @@ class WebSockets {
       });
       client.on('disconnect', () => {
         this.users.delete(clientId);
+        client.rooms.clear();
       });
     });
   };
