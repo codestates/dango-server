@@ -7,14 +7,14 @@ class WebSockets {
   connect = (io: Server) => {
     io.on('connection', (client: Socket) => {
       // 클라이언트 objectId : ( _id )
-      const ClientId = client.handshake.query.ClientId;
+      const clientId = client.handshake.query.clientId;
       // 쿼리로 담겨온 클라이언트 아이디를 소켓아이디와 함께 users에 저장
-      this.users.set(ClientId, client.id);
+      this.users.set(clientId, client.id);
 
       // 클라이언트가 자신 아이디, 자신 채팅방 상대 아이디 배열과 함께 방 생성요청을 보냄
-      client.on('joinroom', (clientId: string, otherId: string[]) => {
+      client.on('joinroom', ( otherIds: string[]) => {
         // 상대 아이디 배열을 돌면서 상대 아이디가 users에 저장되어있는지 확인
-        otherId.forEach((otherId) => {
+        otherIds.forEach((otherId) => {
           if (this.users.has(otherId)) {
             // 저장돼있다면 둘다 로그인 상태이므로 방을 만들어준다.
 
@@ -40,18 +40,18 @@ class WebSockets {
       client.on('messageToOther', (otherId: string, message: string) => {
         // 두 유저의 아이디를 받아와서 메세지를 그 방에 뿌려준다.
         // 누구의 아이디가 앞에있는지 모르므로 두번 체크한다.
-        if (client.rooms.has(`${ClientId}${otherId}`)) {
+        if (client.rooms.has(`${clientId}${otherId}`)) {
           io.sockets
-            .in(`${ClientId}${otherId}`)
-            .emit('messageFromOther', `방이름 : ${ClientId}${otherId}, 메세지 ${message}`);
-        } else if (client.rooms.has(`${otherId}${ClientId}`)) {
+            .in(`${clientId}${otherId}`)
+            .emit('messageFromOther', `방이름 : ${clientId}${otherId}, 메세지 ${message}`);
+        } else if (client.rooms.has(`${otherId}${clientId}`)) {
           io.sockets
-            .in(`${otherId}${ClientId}`)
-            .emit('messageFromOther', `방이름 : ${otherId}${ClientId}, 메세지 ${message}`);
+            .in(`${otherId}${clientId}`)
+            .emit('messageFromOther', `방이름 : ${otherId}${clientId}, 메세지 ${message}`);
         }
       });
       client.on('disconnect', () => {
-        this.users.delete(ClientId);
+        this.users.delete(clientId);
       });
     });
   };
