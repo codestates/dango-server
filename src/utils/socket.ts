@@ -6,44 +6,54 @@ class WebSockets {
   private online: number = 0;
   connect = (io: Server) => {
     io.on('connection', (client: Socket) => {
-      // console.log(client.handshake.query.ClientId);
-      this.users.set(client.handshake.query.ClientId, client.id);
-      console.log(this.users);
-      client.on('NewPlayer', (data1: string) => {
-        console.log(client.rooms)
-      });
+      // 클라이언트 objectId : ( _id )
+      const ClientId = client.handshake.query.ClientId;
+      // 쿼리로 담겨온 클라이언트 아이디를 소켓아이디와 함께 users에 저장
+      this.users.set(ClientId, client.id);
 
-      client.on('DelPlayer', (data) => {
-        console.log('Adios' + data);
-      });
-
+      // 클라이언트가 자신 아이디, 자신 채팅방 상대 아이디 배열과 함께 방 생성요청을 보냄
       client.on('joinroom', (clientId: string, otherId: string[]) => {
-        otherId.forEach((id) => {
-          if (this.users.has(id)) {
-            const connected = this.users.get(id);
-            const a = io.of('/').sockets.get(connected);
-            a?.join(`${this.users.get(clientId)}${connected}`);
-            client.join(`${this.users.get(clientId)}${connected}`)
+        // 상대 아이디 배열을 돌면서 상대 아이디가 users에 저장되어있는지 확인
+        otherId.forEach((otherId) => {
+          if (this.users.has(otherId)) {
+            // 저장돼있다면 둘다 로그인 상태이므로 방을 만들어준다.
+
+            // 로그인된 채팅방 상대의 소켓 아이디를 찾고,
+            const otherSocketId = this.users.get(otherId);
+            // 상대방 소켓을 불러온 뒤
+            const otherClient = io.of('/').sockets.get(otherSocketId);
+
+            // 방이름을 유일하게 하기 위해 두 사람의 _id를 더해서 유일한 방이름을 만든다.
+            const roomname = `${clientId}${otherId}`;
+
+            // 두사람만 들어가있는 방을 생성한다.
+            otherClient?.join(roomname);
+            client.join(roomname);
+
+            // 테스트용
+            io.sockets.in(roomname).emit('hasjoined', otherSocketId);
           }
         });
       });
 
-      client.on('disconnect', (data) => {
-        this.users.delete(client.handshake.query.ClientId);
-        console.log(client.rooms)
-
+      // 상대방에게 메세지 보내기
+      client.on('messageToOther', (otherId: string, message: string) => {
+        // 두 유저의 아이디를 받아와서 메세지를 그 방에 뿌려준다.
+        // 누구의 아이디가 앞에있는지 모르므로 두번 체크한다.
+        if (client.rooms.has(`${ClientId}${otherId}`)) {
+          io.sockets
+            .in(`${ClientId}${otherId}`)
+            .emit('messageFromOther', `방이름 : ${ClientId}${otherId}, 메세지 ${message}`);
+        } else if (client.rooms.has(`${otherId}${ClientId}`)) {
+          io.sockets
+            .in(`${otherId}${ClientId}`)
+            .emit('messageFromOther', `방이름 : ${otherId}${ClientId}, 메세지 ${message}`);
+        }
+      });
+      client.on('disconnect', () => {
+        this.users.delete(ClientId);
       });
     });
-    // io.sockets.on('connection', (socket: string) => {
-    //   this.users.push(socket);
-
-    //   socket.on('disconnect', () => {
-    //     console.log('Got disconnect!');
-
-    //     var i = this.users.indexOf(socket);
-    //     this.users.splice(i, 1);
-    //   });
-    // });
   };
   generate = (io: Server) => {
     io.of('/').adapter.on('create-room', (room) => {
