@@ -6,7 +6,7 @@ import getDetail from '../controller/talents/detail';
 
 const router = Router();
 
-router.get('/map', getTalentsBylocation);
+router.post('/map', getTalentsBylocation);
 router.post('/create', createTalent);
 router.get('/preview/:talentId', getPreview);
 router.get('/detail/:talentId', getDetail);

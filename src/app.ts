@@ -25,12 +25,21 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 
-import UserModel from './models/user';
-import TalentModel from './models/talents';
+
+
+
+
+
+
 app.get('/test', async (req: Request, res: Response) => {
-  const a = await UserModel.find({ nickname: 'SYH' }).select('_id');
-  const b = await TalentModel.updateOne({ category: 'coding' }, { $set: { userInfo: a[0]._id } });
-  res.send(b);
+});
+
+// 404 page
+app.use('*', (req, res) => {
+  return res.status(404).json({
+    success: false,
+    message: 'API endpoint doesnt exist'
+  })
 });
 
 export default app;

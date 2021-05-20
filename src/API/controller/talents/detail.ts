@@ -7,7 +7,7 @@ export default async (req: Request, res: Response) => {
   try {
     const result: PopulatedTalent = await TalentModel.findOne({ _id: oid })
       .populate({ path: 'userInfo', select: 'nickname socialData' })
-      .select('-__v ')
+      .select('-__v -images')
       .lean();
     if (result) {
       delete result.userInfo.socialData.id;

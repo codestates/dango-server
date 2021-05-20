@@ -10,6 +10,7 @@ export default async (req: Request, res: Response) => {
     const talent = {
       ...reqData,
       userInfo: reqData.userId,
+      location:reqData.location.reverse(),// 클라에선 위도경도로 보내고, DB엔 경도위도로 저장.
     };
     delete talent.userId;
 
