@@ -1,7 +1,7 @@
 import { PopulatedTalent } from './../../../@types/index.d';
 import { Request, Response } from 'express';
 import TalentModel from '../../../models/talents';
-import solveMapWidth from '../../../service/coordinates';
+import solveMapWidth from '../../../utils/coordinates';
 
 export default async (req: Request, res: Response) => {
   const [S, N]: number[] = req.body.width;
