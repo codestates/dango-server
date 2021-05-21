@@ -10,8 +10,9 @@ const schema = new Schema<User>({
     email: { type: String, required: false, unique: true },
     image: { type: String, required: false },
   },
-  selling: { type: [String], required: false },
-  bought: { type: [String], required: false },
+  selling: [String],
+  bought: [String],
+  talks:[String],
 });
 
 const UserModel = model<User>('users', schema);

@@ -12,7 +12,7 @@ class WebSockets {
       this.users.set(clientId, client.id);
 
       // 클라이언트가 자신 아이디, 자신 채팅방 상대 아이디 배열과 함께 방 생성요청을 보냄
-      client.on('joinroom', ( otherIds: string[]) => {
+      client.on('joinroom', (otherIds: string[]) => {
         // 상대 아이디 배열을 돌면서 상대 아이디가 users에 저장되어있는지 확인
         otherIds.forEach((otherId) => {
           if (this.users.has(otherId)) {
@@ -41,6 +41,7 @@ class WebSockets {
         // 두 유저의 아이디를 받아와서 메세지를 그 방에 뿌려준다.
         // 누구의 아이디가 앞에있는지 모르므로 두번 체크한다.
         if (client.rooms.has(`${clientId}${otherId}`)) {
+          console.log(message);
           io.sockets
             .in(`${clientId}${otherId}`)
             .emit('messageFromOther', `방이름 : ${clientId}${otherId}, 메세지 ${message}`);
@@ -48,10 +49,13 @@ class WebSockets {
           io.sockets
             .in(`${otherId}${clientId}`)
             .emit('messageFromOther', `방이름 : ${otherId}${clientId}, 메세지 ${message}`);
+        } else {// 온라인 상태인 유저로부터 메세지를 받아왔지만 상대는 온라인이 아닌 경우
+
         }
       });
       client.on('disconnect', () => {
         this.users.delete(clientId);
+        client.rooms.clear();
       });
     });
   };

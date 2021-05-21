@@ -1,5 +1,5 @@
-// example
 import mongoose from 'mongoose';
+const objectId = typeof mongoose.Schema.Types.ObjectId;
 
 // mongoose schema
 export interface User {
@@ -13,13 +13,14 @@ export interface User {
   };
   selling: string[];
   bought: string[];
+  talks:string[];
 }
 
 export interface Talent {
   userInfo: {
     ref: string;
     _id: boolean;
-    type: typeof mongoose.Schema.Types.ObjectId;
+    type: objectId;
     required: boolean;
   };
   reviews: Review[];
@@ -35,7 +36,7 @@ export interface Talent {
 
 export interface PopulatedTalent {
   userInfo: {
-    _id: typeof mongoose.Schema.Types.ObjectId;
+    _id: objectId;
     nickname: string;
     socialData: {
       id?: number;
@@ -54,5 +55,23 @@ export interface Review {
   reply?: string;
 }
 
-// 구매중 구매완료?
-//
+export interface ChatRoom {
+  _id: string;
+  others: string[];
+  type: string;
+  initiator: string;
+}
+
+export interface ReadBy {
+  readUser: string;
+  readAt: Date;
+}
+
+export interface Message {
+  _id: string;
+  roomId: String;
+  message: any;
+  type: string;
+  postedBy: string;
+  readBy: mongoose.Schema[];
+}
