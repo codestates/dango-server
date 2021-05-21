@@ -25,12 +25,11 @@ import ChatRoomModel from './models/chatrooms';
 import MessageModel from './models/chatmessages';
 
 app.get('/test', async (req: Request, res: Response) => {
-  const a = await MessageModel.getMessagesByRoomId('f83f39e21a7449898246ac3b61fcfe16',"60a631d45e496eae79fc9c01",{ page: 0, limit: 10, skip: 0 });
-  // MessageModel.updateReadBy('f83f39e21a7449898246ac3b61fcfe16', "609ec5a42b6cd4396e5d2bcf")
+  // const a = await MessageModel.getMessagesByRoomId('f83f39e21a7449898246ac3b61fcfe16',"60a631d45e496eae79fc9c01",{ page: 0, limit: 10, skip: 0 });
+  const b = await MessageModel.updateReadBy('f83f39e21a7449898246ac3b61fcfe16', "60a631d45e496eae79fc9c01");
   // MessageModel.createPost("f83f39e21a7449898246ac3b61fcfe16",'2203',"609ec5a42b6cd4396e5d2bcf")
-  res.json({ message: 'success', data: a });
-  // res.json({ message: 'success' });
-  
+  // res.json({ message: 'success', data: a });
+  res.json({ message: 'success', data: b });
 });
 // 404 page
 app.use('*', (req, res) => {

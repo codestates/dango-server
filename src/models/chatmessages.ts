@@ -76,13 +76,13 @@ messageSchema.statics.getMessagesByRoomId = async function (
           },
           isRead: {
             $function: {
-              body: function (readBy: any[],userId:string) {
+              body: function (readBy: any[], userId: string) {
                 if (readBy.find((readByArr: any) => readByArr.readUser === userId)) {
                   return true;
                 }
                 return false;
               },
-              args: ['$readBy','$userId'],
+              args: ['$readBy', '$userId'],
               lang: 'js',
             },
           },
@@ -99,22 +99,13 @@ messageSchema.statics.getMessagesByRoomId = async function (
 
 messageSchema.statics.updateReadBy = async function (roomId: string, userId: string) {
   try {
-    // this.updateMany(
-    //   {
-    //     roomId,
-    //     'readBy.readUser': { $ne: userId },
-    //   },
-    //   [
-    //     {
-    //       $addToSet: {
-    //         readBy: { readUser: userId },
-    //       },
-    //     },
-    //     {
-    //       multi: true,
-    //     },
-    //   ],
-    // );
+    await this.updateMany(
+      {
+        roomId,
+        'readBy.readUser': { $ne: userId },
+      },
+      { $addToSet: { readBy: { readUser: userId } } },// 오류는 뜨지만 된다?
+    );
   } catch (err) {
     console.log(err);
   }
@@ -129,6 +120,7 @@ messageSchema.statics.createPost = async function (roomId: string, message: stri
       postedBy,
       readBy: { readUser: postedBy },
     });
+    console.log(result);
     delete result.return;
   } catch (err) {
     console.log(err);
