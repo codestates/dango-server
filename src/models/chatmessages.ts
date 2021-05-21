@@ -1,5 +1,5 @@
 import { IMessageModel, IMessageDocument, MessageOptions } from './../@types/models.d';
-import { Schema, model } from 'mongoose';
+import { Schema, model, Types } from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
 import { ReadBy } from './../@types/index.d';
 
@@ -104,7 +104,7 @@ messageSchema.statics.updateReadBy = async function (roomId: string, userId: str
         roomId,
         'readBy.readUser': { $ne: userId },
       },
-      { $addToSet: { readBy: { readUser: userId } } },// 오류는 뜨지만 된다?
+      { $addToSet: { readBy: { readUser: userId } } }, // 오류는 뜨지만 된다?
     );
   } catch (err) {
     console.log(err);
@@ -114,19 +114,69 @@ messageSchema.statics.updateReadBy = async function (roomId: string, userId: str
 messageSchema.statics.createPost = async function (roomId: string, message: string, postedBy: string) {
   try {
     // 저장
-    const result = await this.create({
+    const createdResult = await this.create({
       roomId,
       message,
       postedBy,
       readBy: { readUser: postedBy },
     });
-    console.log(result);
-    delete result.return;
+    if (createdResult) {
+      // const user_id = Types.ObjectId(createdResult.postedBy);
+      const findWithPostedBy = await this.aggregate([
+        { $sort: { createdAt: -1 } },
+        { $limit: 1 },
+        { $match: { _id: createdResult._id } },
+        {
+          $lookup: {
+            let: { userObjId: { $toObjectId: '$postedBy' } },
+            from: 'users',
+            pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$userObjId'] } } }],
+            as: 'postedBy',
+          },
+        },
+        {
+          $addFields: {
+            postedBy: {
+              $function: {
+                body: function (postedBy: any) {
+                  const a = postedBy[0];
+                  return {
+                    _id: a._id,
+                    nickname: a.nickname,
+                    image: a.socialData.image,
+                  };
+                },
+                args: ['$postedBy'],
+                lang: 'js',
+              },
+            },
+          },
+        },
+        { $unset: ['__v', 'updatedAt', 'roomId', 'readBy', 'userId'] },
+      ]);
+      console.log({
+        ...findWithPostedBy[0],
+        isRead: true,
+      });
+    }
   } catch (err) {
     console.log(err);
   }
 };
-
+/*
+{
+            "_id": "bcedbe45f0934e9295ce74873c9ab79e",
+            "type": "text",
+            "message": "asd",
+            "postedBy": {
+                "_id": "60a631d45e496eae79fc9c01",
+                "nickname": "ABC",
+                "image": "https://placeimg.com/120/120/people/grayscale"
+            },
+            "createdAt": "2021-05-21T09:25:21.195Z",
+            "isRead": true
+        }
+*/
 const MessageModel = model<IMessageDocument, IMessageModel>('messages', messageSchema);
 // const ReadByModel = model<ReadBy>('chatrooms', readbySchema); : 도큐먼트에 저장 안함?
 export default MessageModel;
