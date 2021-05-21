@@ -34,11 +34,22 @@ const messageSchema: Schema<IMessageDocument> = new Schema(
   },
 );
 
-messageSchema.statics.getMessagesByRoomId = async function (roomId: string, options = { page: 0, limit: 5, skip: 0 }) {
+messageSchema.statics.getMessagesByRoomId = async function (
+  roomId: string,
+  userId: string,
+  options = { page: 0, limit: 5, skip: 0 },
+) {
   try {
     return this.aggregate([
-      { $match: { roomId } },
       { $sort: { createdAt: -1 } },
+      { $skip: options.page * options.limit + options.skip },
+      { $limit: options.limit },
+      { $match: { roomId } },
+      {
+        $set: {
+          userId: userId,
+        },
+      },
       {
         $lookup: {
           let: { userObjId: { $toObjectId: '$postedBy' } },
@@ -63,25 +74,62 @@ messageSchema.statics.getMessagesByRoomId = async function (roomId: string, opti
               lang: 'js',
             },
           },
-          readBy: {
+          isRead: {
             $function: {
-              body: function (readBy: any) {
-                const a = !!readBy[0] || false;
-                return a;
+              body: function (readBy: any[],userId:string) {
+                if (readBy.find((readByArr: any) => readByArr.readUser === userId)) {
+                  return true;
+                }
+                return false;
               },
-              args: ['$readBy'],
+              args: ['$readBy','$userId'],
               lang: 'js',
             },
           },
         },
       },
-      { $unset: ['__v', 'updatedAt', 'roomId'] },
-      { $skip: options.page * options.limit + options.skip },
-      { $limit: options.limit },
-      { $sort: { createdAt: 1 } },
+      { $unset: ['__v', 'updatedAt', 'roomId', 'readBy', 'userId'] },
       { $sort: { createdAt: 1 } },
       // { $unwind: '$postedBy' },
     ]);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+messageSchema.statics.updateReadBy = async function (roomId: string, userId: string) {
+  try {
+    // this.updateMany(
+    //   {
+    //     roomId,
+    //     'readBy.readUser': { $ne: userId },
+    //   },
+    //   [
+    //     {
+    //       $addToSet: {
+    //         readBy: { readUser: userId },
+    //       },
+    //     },
+    //     {
+    //       multi: true,
+    //     },
+    //   ],
+    // );
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+messageSchema.statics.createPost = async function (roomId: string, message: string, postedBy: string) {
+  try {
+    // 저장
+    const result = await this.create({
+      roomId,
+      message,
+      postedBy,
+      readBy: { readUser: postedBy },
+    });
+    delete result.return;
   } catch (err) {
     console.log(err);
   }
