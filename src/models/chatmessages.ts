@@ -154,10 +154,10 @@ messageSchema.statics.createPost = async function (roomId: string, message: stri
         },
         { $unset: ['__v', 'updatedAt', 'roomId', 'readBy', 'userId'] },
       ]);
-      console.log({
+      return {
         ...findWithPostedBy[0],
         isRead: true,
-      });
+      }
     }
   } catch (err) {
     console.log(err);
