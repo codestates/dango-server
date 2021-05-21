@@ -13,6 +13,7 @@ export interface User {
   };
   selling: string[];
   bought: string[];
+  talks:string[];
 }
 
 export interface Talent {

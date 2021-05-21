@@ -10,39 +10,9 @@ const schema = new Schema<User>({
     email: { type: String, required: false, unique: true },
     image: { type: String, required: false },
   },
-  selling: {
-    type: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'talents',
-        required: false,
-        _id: false,
-      },
-    ],
-    required: false,
-  },
-  bought: {
-    type: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'talents',
-        required: false,
-        _id: false,
-      },
-    ],
-    required: false,
-  },
-  // talks:{
-  //   type: [
-  //     {
-  //       type: Schema.Types.ObjectId,
-  //       ref: 'talents',
-  //       required: false,
-  //       _id: false,
-  //     },
-  //   ],
-  //   required: false,
-  // }
+  selling: [String],
+  bought: [String],
+  talks:[String],
 });
 
 const UserModel = model<User>('users', schema);
