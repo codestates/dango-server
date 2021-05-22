@@ -25,9 +25,15 @@ import ChatRoomModel from './models/chatrooms';
 import MessageModel from './models/chatmessages';
 
 app.get('/test', async (req: Request, res: Response) => {
-  // const a = await MessageModel.getMessagesByRoomId('f83f39e21a7449898246ac3b61fcfe16',"60a631d45e496eae79fc9c01",{ page: 0, limit: 10, skip: 0 });
+  console.time('test');
+  // const a = await MessageModel.getMessagesByRoomId('f83f39e21a7449898246ac3b61fcfe16', '60a631d45e496eae79fc9c01', {
+  //   page: 0,
+  //   limit: 10,
+  //   skip: 0,
+  // });
   // const b = await MessageModel.updateReadBy('f83f39e21a7449898246ac3b61fcfe16', "60a631d45e496eae79fc9c01");
   MessageModel.createPost("f83f39e21a7449898246ac3b61fcfe16",'2203',"609ec5a42b6cd4396e5d2bcf")
+  console.timeEnd('test');
   // res.json({ message: 'success', data: a });
   res.json({ message: 'success' });
 });
@@ -40,3 +46,42 @@ app.use('*', (req, res) => {
 });
 
 export default app;
+/*
+{
+            "_id": "d82b002195194967b5b06bff4761d0fb",
+            "type": "text",
+            "message": "2203",
+            "postedBy": {
+                "_id": "609ec5a42b6cd4396e5d2bcf",
+                "nickname": "SYH",
+                "image": "https://placeimg.com/120/120/people/grayscale"
+            },
+            "createdAt": "2021-05-21T18:18:20.662Z",
+            "isRead": false
+        }
+*/
+
+/*
+{
+            "_id": "4461def29baf40129993b5630b65e839",
+            "type": "text",
+            "message": "2203",
+            "postedBy": [
+                {
+                    "_id": "609ec5a42b6cd4396e5d2bcf",
+                    "selling": [],
+                    "bought": [],
+                    "nickname": "SYH",
+                    "socialData": {
+                        "id": 1679231556,
+                        "social": "kakao",
+                        "name": "신영호",
+                        "email": "dydh1324@naver.com",
+                        "image": "https://placeimg.com/120/120/people/grayscale"
+                    },
+                    "__v": 0
+                }
+            ],
+            "createdAt": "2021-05-21T18:18:29.356Z"
+        }
+*/
