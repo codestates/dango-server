@@ -1,12 +1,13 @@
 import { Schema, model } from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
 import { IChatRoomDocument, IchatRoomModel } from '../@types/roomModels';
+import UserModel from './user';
 
 const schema: Schema<IChatRoomDocument> = new Schema(
   {
     _id: { type: String, default: () => uuidv4().replace(/\-/g, '') },
-    others: [String],
-    type: String,
+    users: [String],
+    type: { type: String, default: '1 to 1' },
     initiator: { type: String, required: true },
   },
   {
@@ -14,15 +15,21 @@ const schema: Schema<IChatRoomDocument> = new Schema(
     collection: 'chatrooms',
   },
 );
-schema.statics.getchatRoomsByUserId = async function(userId: string) {
-  try{
-    // 방이랑 상대방 유저Id랑 몇개 안읽었는지 확인 핗요
-    return this.find()
-    
-  } catch(err){
+
+schema.statics.generateChatRooms = async function (userId: string, otherId: string) {
+  try {
+    const newRoom = await this.create({
+      users: [otherId, userId],
+      initiator: userId,
+    });
+    if (newRoom) {
+      UserModel.updateOne({ _id: userId }, { $push: { talks: newRoom._id } });
+    }
+  } catch (err) {
     console.log(err);
   }
 };
+
 
 const ChatRoomModel = model<IChatRoomDocument, IchatRoomModel>('chatrooms', schema);
 

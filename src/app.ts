@@ -35,7 +35,8 @@ app.get('/test', async (req: Request, res: Response) => {
   //   skip: 0,
   // });
   // const b = await MessageModel.updateReadBy('f83f39e21a7449898246ac3b61fcfe16', "60a631d45e496eae79fc9c01");
-  MessageModel.createPost("f83f39e21a7449898246ac3b61fcfe16",'2203',"609ec5a42b6cd4396e5d2bcf")
+  // MessageModel.createPost("f83f39e21a7449898246ac3b61fcfe16",'2203',"609ec5a42b6cd4396e5d2bcf")
+  ChatRoomModel.generateChatRooms("60a631d45e496eae79fc9c01","609ec5a42b6cd4396e5d2bcf");
   console.timeEnd('test');
   // res.json({ message: 'success', data: a });
   res.json({ message: 'success' });
