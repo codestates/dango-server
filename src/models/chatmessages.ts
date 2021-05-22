@@ -1,4 +1,4 @@
-import { IMessageModel, IMessageDocument, MessageOptions } from './../@types/models.d';
+import { IMessageModel, IMessageDocument, MessageOptions } from '../@types/messageModels';
 import { Schema, model, Types } from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
 import { ReadBy } from './../@types/index.d';
@@ -40,6 +40,7 @@ messageSchema.statics.getMessagesByRoomId = async function (
   options = { page: 0, limit: 5, skip: 0 },
 ) {
   try {
+    // 나중에 유저id로 방 있는지 유효성체크
     return this.aggregate([
       { $sort: { createdAt: -1 } },
       { $match: { roomId } },
