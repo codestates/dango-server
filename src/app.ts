@@ -16,6 +16,9 @@ mongoose().then(() => {
 // route
 app.use('/users', route.users);
 app.use('/talents', route.talents);
+app.use('/chats',route.chats);
+
+
 
 app.get('/', (req: Request, res: Response) => {
   res.send({ message: 'hello ngrok!' });
