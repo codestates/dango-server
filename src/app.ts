@@ -26,6 +26,7 @@ app.get('/', (req: Request, res: Response) => {
 
 import ChatRoomModel from './models/chatrooms';
 import MessageModel from './models/chatmessages';
+import UserModel from './models/user';
 
 app.get('/test', async (req: Request, res: Response) => {
   console.time('test');
@@ -34,12 +35,13 @@ app.get('/test', async (req: Request, res: Response) => {
   //   limit: 10,
   //   skip: 0,
   // });
-  // const b = await MessageModel.updateReadBy('f83f39e21a7449898246ac3b61fcfe16', "60a631d45e496eae79fc9c01");
-  // MessageModel.createPost("f83f39e21a7449898246ac3b61fcfe16",'2203',"609ec5a42b6cd4396e5d2bcf")
-  ChatRoomModel.generateChatRooms("60a631d45e496eae79fc9c01","609ec5a42b6cd4396e5d2bcf");
+  // const b = await MessageModel.updateReadBy('cf1f0166a9a04c78ae8d4a13e57923bb', "60a631d45e496eae79fc9c01");
+  // MessageModel.createPost("cf1f0166a9a04c78ae8d4a13e57923bb",'2203',"609ec5a42b6cd4396e5d2bcf")
+  // ChatRoomModel.generateChatRooms("60a631d45e496eae79fc9c01","609ec5a42b6cd4396e5d2bcf");
+  const a = await UserModel.getchatRoomsByUserId("60a631d45e496eae79fc9c01")
   console.timeEnd('test');
-  // res.json({ message: 'success', data: a });
-  res.json({ message: 'success' });
+  res.json({ message: 'success', data: a });
+  // res.json({ message: 'success' });
 });
 // 404 page
 app.use('*', (req, res) => {
