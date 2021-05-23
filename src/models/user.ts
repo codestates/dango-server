@@ -12,6 +12,7 @@ const schema: Schema<IUserDocument> = new Schema({
     image: { type: String, required: false },
   },
   selling: { type: [String], default: [] },
+  buying: { type: [String], default: [] },
   bought: { type: [String], default: [] },
   talks: { type: [String], default: [] },
 });
@@ -21,6 +22,7 @@ schema.statics.getchatRoomsByUserId = async function (userId: string) {
     // 방이랑 상대방 유저Id랑 몇개 안읽었는지 확인 핗요
     const result = await this.aggregate([
       { $match: { _id: Types.ObjectId(userId) } },
+      { $set: { _id: userId } },
       {
         $unwind: '$talks',
       },
@@ -61,14 +63,20 @@ schema.statics.getchatRoomsByUserId = async function (userId: string) {
               lang: 'js',
             },
           },
+          // count: '$count',
           count: {
             $function: {
-              body: function (countArr: any[]) {
-                return countArr.reduce((acc: number, cur: any) => {
-                  return cur.length > 1 ? acc : acc + 1;
+              body: function (countArr: any[], userId: string) {
+                if (countArr.length === 0) return 0;
+                return countArr.reduce((acc: number, cur: any[]) => {
+                  let isRead = false;
+                  cur.forEach((el: any) => {
+                    if (el.readUser === userId) isRead = true;
+                  });
+                  return isRead ? acc : acc + 1;
                 }, 0);
               },
-              args: ['$count'],
+              args: ['$count', '$_id'],
               lang: 'js',
             },
           },
@@ -77,7 +85,7 @@ schema.statics.getchatRoomsByUserId = async function (userId: string) {
       {
         $replaceWith: {
           roomId: '$roomId',
-          other:"$other",
+          other: '$other',
           count: '$count',
         },
       },

@@ -11,6 +11,7 @@ export default async (req: Request, res: Response) => {
       const result = await UserModel.findOne({ 'socialData.id': userData.sub }).select('nickname socialData _id');
       if (result) {
         const { social, email, image } = result.socialData;
+        const chatRooms = await UserModel.getchatRoomsByUserId(result._id) || null;
         res.send({
           message: '로그인에 성공했습니다.',
           _id: result._id,
@@ -19,6 +20,10 @@ export default async (req: Request, res: Response) => {
             email,
             image,
           },
+          chatRooms,
+          selling:result.selling,
+          buying:result.buying,
+          bought:result.bought,
           nickname: result.nickname,
         });
       } else {
