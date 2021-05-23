@@ -13,7 +13,13 @@ const schema: Schema<IUserDocument> = new Schema({
   },
   selling: { type: [String], default: [] },
   buying: { type: [String], default: [] },
-  bought: { type: [String], default: [] },
+  unreviewed: [
+    {
+      id: [String],
+      confirmed: [String],
+    },
+  ],
+  reviewed: { type: [String], default: [] },
   talks: { type: [String], default: [] },
 });
 

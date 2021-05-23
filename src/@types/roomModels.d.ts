@@ -7,5 +7,5 @@ export interface IChatRoomDocument extends ChatRoom, Document {}
 
 // statics
 export interface IchatRoomModel extends Model<IChatRoomDocument> {
-  generateChatRooms: (userId:string, otherId:string) => Promise<IchatRoomDocument>;
+  generateChatRooms: (userId:string, otherId:string, talentId:string) => Promise<IchatRoomDocument>;
 }
