@@ -8,7 +8,7 @@ export default async (req: Request, res: Response) => {
     // IdToken으로 유저정보 가져온다.
     const userData = await GoogleAuth.getGoogleProfile(IdToken);
     if (userData) {
-      const result = await UserModel.findOne({ 'socialData.id': userData.sub }).select('nickname socialData _id');
+      const result = await UserModel.findOne({ 'socialData.id': userData.sub })
       if (result) {
         const { social, email, image } = result.socialData;
         const chatRooms = await UserModel.getchatRoomsByUserId(result._id) || null;

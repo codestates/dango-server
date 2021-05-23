@@ -8,11 +8,12 @@ export default async (req: Request, res: Response) => {
     // 유저정보 받아오고
     const data = await KakaoAuth.getUserInfo(accessToken);
     // DB에 id가 있는지 확인
-    const result = await UserModel.findOne({ 'socialData.id': data.id }).select('nickname socialData');
+    const result = await UserModel.findOne({ 'socialData.id': data.id })
     // 데이터가 있으면 토큰과 닉네임 보내준다.
     if (result) {
       const { social, email, image } = result.socialData;
       const chatRooms = (await UserModel.getchatRoomsByUserId(result._id)) || null;
+      console.log(result.selling)
       res.send({
         message: '로그인에 성공했습니다.',
         accessToken,
