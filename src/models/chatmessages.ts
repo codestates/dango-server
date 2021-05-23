@@ -1,4 +1,4 @@
-import { IMessageModel, IMessageDocument, MessageOptions } from './../@types/models.d';
+import { IMessageModel, IMessageDocument, MessageOptions } from '../@types/messageModels';
 import { Schema, model, Types } from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
 import { ReadBy } from './../@types/index.d';
@@ -40,16 +40,10 @@ messageSchema.statics.getMessagesByRoomId = async function (
   options = { page: 0, limit: 5, skip: 0 },
 ) {
   try {
+    // 나중에 유저id로 방 있는지 유효성체크
     return this.aggregate([
       { $sort: { createdAt: -1 } },
-      { $skip: options.page * options.limit + options.skip },
-      { $limit: options.limit },
       { $match: { roomId } },
-      {
-        $set: {
-          userId: userId,
-        },
-      },
       {
         $lookup: {
           let: { userObjId: { $toObjectId: '$postedBy' } },
@@ -58,39 +52,52 @@ messageSchema.statics.getMessagesByRoomId = async function (
           as: 'postedBy',
         },
       },
+      // {
+      //   $addFields: {
+      //     postedBy: {
+      //       $function: {
+      //         body: function (postedBy: any) {
+      //           return {
+      //             _id: postedBy[0]._id,
+      //             nickname: postedBy[0].nickname,
+      //             image: postedBy[0].socialData.image,
+      //           };
+      //         },
+      //         args: ['$postedBy'],
+      //         lang: 'js',
+      //       },
+      //     },
+      //     isRead: {
+      //       $function: {
+      //         body: function (readBy: any[], userId: string) {
+      //           if (readBy.find((readByArr: any) => readByArr.readUser === userId)) {
+      //             return true;
+      //           }
+      //           return false;
+      //         },
+      //         args: ['$readBy', '$userId'],
+      //         lang: 'js',
+      //       },
+      //     },
+      //   },
+      // },
+      //
       {
-        $addFields: {
+        $replaceWith: {
+          _id: '$_id',
+          type: '$type',
+          message: '$message',
+          createdAt: '$createdAt',
           postedBy: {
-            $function: {
-              body: function (postedBy: any) {
-                const a = postedBy[0];
-                return {
-                  _id: a._id,
-                  nickname: a.nickname,
-                  image: a.socialData.image,
-                };
-              },
-              args: ['$postedBy'],
-              lang: 'js',
-            },
-          },
-          isRead: {
-            $function: {
-              body: function (readBy: any[], userId: string) {
-                if (readBy.find((readByArr: any) => readByArr.readUser === userId)) {
-                  return true;
-                }
-                return false;
-              },
-              args: ['$readBy', '$userId'],
-              lang: 'js',
-            },
+            _id: { $arrayElemAt: ['$postedBy._id', 0] },
+            nickname: { $arrayElemAt: ['$postedBy.nickname', 0] },
+            image: { $arrayElemAt: ['$postedBy.socialData.image', 0] },
           },
         },
       },
-      { $unset: ['__v', 'updatedAt', 'roomId', 'readBy', 'userId'] },
+      { $skip: options.page * options.limit + options.skip },
+      { $limit: options.limit },
       { $sort: { createdAt: 1 } },
-      // { $unwind: '$postedBy' },
     ]);
   } catch (err) {
     console.log(err);
@@ -121,7 +128,6 @@ messageSchema.statics.createPost = async function (roomId: string, message: stri
       readBy: { readUser: postedBy },
     });
     if (createdResult) {
-      // const user_id = Types.ObjectId(createdResult.postedBy);
       const findWithPostedBy = await this.aggregate([
         { $sort: { createdAt: -1 } },
         { $limit: 1 },
@@ -135,29 +141,20 @@ messageSchema.statics.createPost = async function (roomId: string, message: stri
           },
         },
         {
-          $addFields: {
+          $replaceWith: {
+            _id: '$_id',
+            type: '$type',
+            message: '$message',
+            createdAt: '$createdAt',
             postedBy: {
-              $function: {
-                body: function (postedBy: any) {
-                  const a = postedBy[0];
-                  return {
-                    _id: a._id,
-                    nickname: a.nickname,
-                    image: a.socialData.image,
-                  };
-                },
-                args: ['$postedBy'],
-                lang: 'js',
-              },
+              _id: { $arrayElemAt: ['$postedBy._id', 0] },
+              nickname: { $arrayElemAt: ['$postedBy.nickname', 0] },
+              image: { $arrayElemAt: ['$postedBy.socialData.image', 0] },
             },
           },
         },
-        { $unset: ['__v', 'updatedAt', 'roomId', 'readBy', 'userId'] },
       ]);
-      return {
-        ...findWithPostedBy[0],
-        isRead: true,
-      }
+      return findWithPostedBy[0];
     }
   } catch (err) {
     console.log(err);
@@ -165,17 +162,16 @@ messageSchema.statics.createPost = async function (roomId: string, message: stri
 };
 /*
 {
-            "_id": "bcedbe45f0934e9295ce74873c9ab79e",
-            "type": "text",
-            "message": "asd",
-            "postedBy": {
-                "_id": "60a631d45e496eae79fc9c01",
-                "nickname": "ABC",
-                "image": "https://placeimg.com/120/120/people/grayscale"
-            },
-            "createdAt": "2021-05-21T09:25:21.195Z",
-            "isRead": true
-        }
+  _id: 'a4dc151a4bb44733a9699b60c7e54e4b',
+  type: 'text',
+  message: '2203',
+  createdAt: '2021-05-22T11:58:57.235Z',
+  postedBy: {
+    _id: '609ec5a42b6cd4396e5d2bcf',
+    nickname: 'SYH',
+    image: 'https://placeimg.com/120/120/people/grayscale',
+  },
+};
 */
 const MessageModel = model<IMessageDocument, IMessageModel>('messages', messageSchema);
 // const ReadByModel = model<ReadBy>('chatrooms', readbySchema); : 도큐먼트에 저장 안함?

@@ -14,9 +14,13 @@ export default async (req: Request, res: Response) => {
       result = await MessageModel.getMessagesByRoomId(roomId, userId);
     }
     if (result) {
-      // 읽음 표시 업데이트
+      setTimeout(() => {
+        MessageModel.updateReadBy(roomId, userId);
+      }, 1);
+      res.json({ message: '채팅 불러오기에 성공했습니다.', data: result });
+    } else {
+      res.json({ message: '채팅 불러오기에 실패했습니다.' });
     }
-    res.json({ message: '채팅 불러오기에 성공했습니다.', data: result });
   } catch (err) {
     res.status(500).json({ message: '서버 응답에 실패했습니다.' });
   }

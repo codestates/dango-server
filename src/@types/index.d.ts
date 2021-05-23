@@ -12,6 +12,7 @@ export interface User {
     image: string;
   };
   selling: string[];
+  buying:string[];
   bought: string[];
   talks:string[];
 }
