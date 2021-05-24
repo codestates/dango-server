@@ -16,20 +16,24 @@ const schema: Schema<IChatRoomDocument> = new Schema(
   },
 );
 
-schema.statics.generateChatRooms = async function (userId: string, otherId: string) {
+schema.statics.generateChatRooms = async function (userId: string, otherId: string, talentId: string) {
   try {
     const newRoom = await this.create({
       users: [otherId, userId],
       initiator: userId,
     });
     if (newRoom) {
-      UserModel.updateOne({ _id: userId }, { $push: { talks: newRoom._id } });
+      await UserModel.updateOne(
+        { _id: userId },
+        { $push: { talks: newRoom._id, buying: { _id: talentId, confirmed: [] } } },
+      );
+      await UserModel.updateOne({ _id: otherId }, { $push: { talks: newRoom._id } });
     }
+    return newRoom._id;
   } catch (err) {
     console.log(err);
   }
 };
-
 
 const ChatRoomModel = model<IChatRoomDocument, IchatRoomModel>('chatrooms', schema);
 

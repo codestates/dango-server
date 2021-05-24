@@ -12,14 +12,24 @@ const schema: Schema<IUserDocument> = new Schema({
     image: { type: String, required: false },
   },
   selling: { type: [String], default: [] },
-  buying: { type: [String], default: [] },
-  bought: { type: [String], default: [] },
+  buying: [
+    {
+      _id: String,
+      confirmed: [String],
+    },
+  ],
+  unreviewed: { type: [String], default: [] },
+  reviewed: { type: [String], default: [] },
   talks: { type: [String], default: [] },
 });
 
 schema.statics.getchatRoomsByUserId = async function (userId: string) {
   try {
     // 방이랑 상대방 유저Id랑 몇개 안읽었는지 확인 핗요
+
+    // TODO : 거래중 상태인지 확인 필요
+    // 내가 거래완료를 눌렀는지, 상대방이 거래완료를 눌렀는지, :::: 메세지의 타입을 confirmed로 해서 채팅에 추가
+    // 메세지에 confirmed 누가했는지 추가
     const result = await this.aggregate([
       { $match: { _id: Types.ObjectId(userId) } },
       { $set: { _id: userId } },
@@ -92,7 +102,7 @@ schema.statics.getchatRoomsByUserId = async function (userId: string) {
     ]);
     return result;
   } catch (err) {
-    console.log(err);
+    console.log(err)
   }
 };
 

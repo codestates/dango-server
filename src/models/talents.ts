@@ -1,5 +1,6 @@
 import { Talent } from './../@types/index.d';
 import { Schema, model } from 'mongoose';
+import { v4 as uuidv4 } from 'uuid';
 
 const schema = new Schema<Talent>({
   userInfo: {
@@ -10,15 +11,24 @@ const schema = new Schema<Talent>({
   },
   reviews: [
     {
+      _id: { type: Schema.Types.ObjectId, ref: 'users' },
+      reviewId: { type: String, default: uuidv4().replace(/\-/g, '') },
       nickname: { type: String, required: true },
       rating: { type: Number, required: true },
       review: { type: String, required: true },
-      reply: { type: String, required: false },
+      date: { type: Date, default: Date.now() },
+      reply: {
+        replyDescription: { type: String, required: false },
+        replyDate: { type: Date, required: false },
+        required: false,
+      },
+      required: false,
     },
   ],
+  buyerId: [String],
   description: { type: String, required: true },
   images: { type: [String], required: false },
-  location: { type: [Number], required: true,index: '2dsphere' },
+  location: { type: [Number], required: true, index: '2dsphere' },
   address: { type: String, required: true },
   ratings: { type: [Number], required: true },
   price: { type: Number, required: true },

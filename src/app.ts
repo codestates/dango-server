@@ -16,7 +16,7 @@ mongoose().then(() => {
 // route
 app.use('/users', route.users);
 app.use('/talents', route.talents);
-app.use('/chats',route.chats);
+app.use('/chats', route.chats);
 
 
 
@@ -37,7 +37,7 @@ app.get('/test', async (req: Request, res: Response) => {
   // });
   // const b = await MessageModel.updateReadBy('cf1f0166a9a04c78ae8d4a13e57923bb', "60a631d45e496eae79fc9c01");
   // MessageModel.createPost("cf1f0166a9a04c78ae8d4a13e57923bb",'2203',"609ec5a42b6cd4396e5d2bcf")
-  // ChatRoomModel.generateChatRooms("60a631d45e496eae79fc9c01","609ec5a42b6cd4396e5d2bcf");
+  // ChatRoomModel.generateChatRooms("60aa662864c0e17598d2e0f0","609ec5a42b6cd4396e5d2bcf","60a3cedf3957ac0124fbaf2c");
   const a = await UserModel.getchatRoomsByUserId("60a631d45e496eae79fc9c01")
   console.timeEnd('test');
   res.json({ message: 'success', data: a });
