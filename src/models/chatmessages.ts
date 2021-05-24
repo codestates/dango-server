@@ -118,12 +118,19 @@ messageSchema.statics.updateReadBy = async function (roomId: string, userId: str
   }
 };
 
-messageSchema.statics.createPost = async function (roomId: string, message: string, postedBy: string) {
+messageSchema.statics.createPost = async function (
+  roomId: string,
+  message: string,
+  postedBy: string,
+  confirm: boolean,
+) {
   try {
     // 저장
+
     const createdResult = await this.create({
       roomId,
       message,
+      type: confirm ? 'confirm' : 'text',
       postedBy,
       readBy: { readUser: postedBy },
     });

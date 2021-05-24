@@ -8,11 +8,11 @@ export interface MessageOptions {
 }
 
 // methods
-export interface IMessageDocument extends Message, Document {}
+export interface IMessageDocument extends Message, Document { }
 
 // statics
 export interface IMessageModel extends Model<IMessageDocument> {
   getMessagesByRoomId: (chatRoomId: string, userId: string, options?: MessageOptions = {}) => Promise<IMessageDocument>;
   updateReadBy: (chatroomId: string, userId: string) => void;
-  createPost: (roomId: string, message: string, postedBy: string) => Promise<IMessageDocument>;
+  createPost: (roomId: string, message: string, postedBy: string, confirm?: boolean) => Promise<IMessageDocument>;
 }

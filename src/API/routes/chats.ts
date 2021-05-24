@@ -4,7 +4,7 @@ import createRoom from '../controller/chat/createRoom';
 
 const router = Router();
 
-router.post('/:roomId', getChats);
 router.post('/createchat', createRoom)
+router.post('/:roomId', getChats);
 
 export default router;

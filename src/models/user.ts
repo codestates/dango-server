@@ -30,7 +30,7 @@ schema.statics.getchatRoomsByUserId = async function (userId: string) {
 
     // TODO : 거래중 상태인지 확인 필요
     // 내가 거래완료를 눌렀는지, 상대방이 거래완료를 눌렀는지, :::: 메세지의 타입을 confirmed로 해서 채팅에 추가
-
+    // 메세지에 confirmed 누가했는지 추가
     const result = await this.aggregate([
       { $match: { _id: Types.ObjectId(userId) } },
       { $set: { _id: userId } },

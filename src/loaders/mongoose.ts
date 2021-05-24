@@ -10,6 +10,7 @@ export default async (): Promise<Db> => {
     useNewUrlParser: true,
     useCreateIndex: true,
     useUnifiedTopology: true,
+    useFindAndModify: false,
   });
 
   const userdoc = new UserModel(fakeUser);
