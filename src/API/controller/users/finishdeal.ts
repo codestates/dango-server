@@ -22,7 +22,6 @@ export default async (req: Request, res: Response) => {
 
     const isSeller = await UserModel.find({ _id: userId, selling: talentId }).select('nickname').lean();
 
-    buyerId = userId;
 
     if (isSeller.length > 0) {
       // 판매자인 경우 구매자 아이디를 가져옴
@@ -35,7 +34,7 @@ export default async (req: Request, res: Response) => {
     const updatedData = await UserModel.findOneAndUpdate(
       { _id: buyerId, 'buying._id': talentId },
       {
-        $addToSet: { 'buying.$.confirmed': 'userId1' },
+        $addToSet: { 'buying.$.confirmed': userId },
       },
     )
       .select('buying')

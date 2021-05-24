@@ -20,7 +20,7 @@ export default async (req: Request, res: Response) => {
     if (result) {
       // 저장 된 경우 해당 글을 작성한 유저의 selling배열에 talentId 푸쉬
       const usersResult = await UserModel.updateOne({ _id: result.userInfo }, { $push: { selling: result._id } });
-      if (usersResult.ok) {
+      if (usersResult.nModified === 1) {
         // 성공
         res.json({ message: '재능 등록에 성공했습니다.' });
       } else {
