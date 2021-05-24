@@ -12,9 +12,9 @@ export interface User {
     image: string;
   };
   selling: string[];
-  buying:string[];
+  buying: string[];
   bought: string[];
-  talks:string[];
+  talks: string[];
 }
 
 export interface Talent {
@@ -50,10 +50,16 @@ export interface PopulatedTalent {
 }
 
 export interface Review {
+  reviewId: string;
   nickname: string; // 참조로 바꿔서 나중에 다른 데이터들도 가져올 수 있게.
   rating: number;
   review: string;
-  reply?: string;
+  date: Date;
+  reply?: Reply;
+}
+export interface Reply {
+  replyDescription: string;
+  replyDate: Date;
 }
 
 export interface ChatRoom {

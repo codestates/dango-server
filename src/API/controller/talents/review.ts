@@ -44,7 +44,10 @@ export default async (req: Request, res: Response) => {
       } else {
         res.status(500).json({ message: '서버 응답에 실패했습니다.' });
       }
+    } else {
+      res.status(404).json({ message: '유효하지 않은 유저입니다.' });
     }
+
   } catch (err) {
     res.status(500).json({ message: '서버 응답에 실패했습니다.' });
     console.log(err);
