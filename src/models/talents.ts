@@ -17,7 +17,8 @@ const schema = new Schema<Talent>({
       date: { type: Date, default: Date.now() },
       reply: {
         replyDescription: { type: String, required: false },
-        replyDate: { type: Date, default: Date.now() },
+        replyDate: { type: Date, required: false },
+        required: false,
       },
       required: false,
     },
