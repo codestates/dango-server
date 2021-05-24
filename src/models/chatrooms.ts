@@ -23,9 +23,13 @@ schema.statics.generateChatRooms = async function (userId: string, otherId: stri
       initiator: userId,
     });
     if (newRoom) {
-      await UserModel.updateOne({ _id: userId }, { $push: { talks: newRoom._id, buying: talentId } });
+      await UserModel.updateOne(
+        { _id: userId },
+        { $push: { talks: newRoom._id, buying: { _id: talentId, confirmed: [] } } },
+      );
       await UserModel.updateOne({ _id: otherId }, { $push: { talks: newRoom._id } });
     }
+    return newRoom._id;
   } catch (err) {
     console.log(err);
   }
