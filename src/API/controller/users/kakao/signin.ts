@@ -13,7 +13,6 @@ export default async (req: Request, res: Response) => {
     if (result) {
       const { social, email, image } = result.socialData;
       const chatRooms = (await UserModel.getchatRoomsByUserId(result._id)) || null;
-      console.log(result.selling)
       res.send({
         message: '로그인에 성공했습니다.',
         accessToken,
@@ -25,8 +24,9 @@ export default async (req: Request, res: Response) => {
         },
         chatRooms,
         selling: result.selling,
-        buying: result.buying,
-        bought: result.bought,
+        buying: result.buying.map(el => el && el._id),
+        unreviewed: result.unreviewed,
+        reviewed: result.reviewed,
         nickname: result.nickname,
       });
     } else {

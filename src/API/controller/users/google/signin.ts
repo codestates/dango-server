@@ -8,10 +8,10 @@ export default async (req: Request, res: Response) => {
     // IdToken으로 유저정보 가져온다.
     const userData = await GoogleAuth.getGoogleProfile(IdToken);
     if (userData) {
-      const result = await UserModel.findOne({ 'socialData.id': userData.sub })
+      const result = await UserModel.findOne({ 'socialData.id': userData.sub });
       if (result) {
         const { social, email, image } = result.socialData;
-        const chatRooms = await UserModel.getchatRoomsByUserId(result._id) || null;
+        const chatRooms = (await UserModel.getchatRoomsByUserId(result._id)) || null;
         res.send({
           message: '로그인에 성공했습니다.',
           _id: result._id,
@@ -21,9 +21,10 @@ export default async (req: Request, res: Response) => {
             image,
           },
           chatRooms,
-          selling:result.selling,
-          buying:result.buying,
-          bought:result.bought,
+          selling: result.selling,
+          buying: result.buying.map((el) => el && el._id),
+          unreviewed: result.unreviewed,
+          reviewed: result.reviewed,
           nickname: result.nickname,
         });
       } else {
