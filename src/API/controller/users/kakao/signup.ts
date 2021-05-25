@@ -32,7 +32,8 @@ export default async (req: Request, res: Response) => {
             image: config.defaultImage,
           },
         });
-        newUser.save((err, user) => {
+        newUser.save(async (err, user) => {
+          const chatRooms = (await UserModel.getchatRoomsByUserId(user._id)) || null;
           res.send({
             message: '회원가입에 성공했습니다.',
             _id: user._id,
@@ -43,6 +44,11 @@ export default async (req: Request, res: Response) => {
               email: email,
               image: config.defaultImage,
             },
+            chatRooms,
+            selling: user.selling,
+            buying: user.buying.map((el) => el && el._id),
+            unreviewed: user.unreviewed,
+            reviewed: user.reviewed,
           });
         });
       } else {

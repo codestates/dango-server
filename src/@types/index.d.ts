@@ -12,8 +12,9 @@ export interface User {
     image: string;
   };
   selling: string[];
-  buying: string[];
-  bought: string[];
+  buying: [{ _id: string; confirmed: string[] }];
+  unreviewed: string[];
+  reviewed: string[];
   talks: string[];
 }
 
