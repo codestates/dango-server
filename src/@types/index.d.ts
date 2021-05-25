@@ -3,6 +3,7 @@ const objectId = typeof mongoose.Schema.Types.ObjectId;
 
 // mongoose schema
 export interface User {
+  _id: string;
   nickname: string;
   socialData: {
     id: number;
@@ -48,9 +49,16 @@ export interface PopulatedTalent {
       image: string;
     };
   };
+  ratings: number[];
+  address: string;
+  category: string;
+  price: number;
+  description: string;
+  reviews: Review[];
 }
 
 export interface Review {
+  _id: User;
   reviewId: string;
   nickname: string; // 참조로 바꿔서 나중에 다른 데이터들도 가져올 수 있게.
   rating: number;
@@ -82,4 +90,16 @@ export interface Message {
   type: string;
   postedBy: string;
   readBy: mongoose.Schema[];
+}
+
+export interface UserInfo {
+  _id: string;
+  nickname: string;
+  socialData: {
+    id: number;
+    social: string;
+    name: string;
+    email: string;
+    image: string;
+  };
 }
