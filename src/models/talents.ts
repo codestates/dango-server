@@ -25,7 +25,6 @@ const schema = new Schema<Talent>({
       required: false,
     },
   ],
-  buyerId: [String],
   description: { type: String, required: true },
   images: { type: [String], required: false },
   location: { type: [Number], required: true, index: '2dsphere' },
