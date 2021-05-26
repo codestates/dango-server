@@ -5,7 +5,7 @@ export default async (req: Request, res: Response) => {
   const userId = req.body.id;
   const { page, skip, limit } = req.body;
   const roomId: string = req.params.roomId;
-
+  console.log(userId, page, skip, limit, roomId)
   try {
     let result = null;
     if (page && skip && limit) {
@@ -13,9 +13,10 @@ export default async (req: Request, res: Response) => {
     } else {
       result = await MessageModel.getMessagesByRoomId(roomId, userId);
     }
+    console.log(result)
     if (result) {
-      setTimeout(() => {
-        MessageModel.updateReadBy(roomId, userId);
+      setTimeout(async () => {
+        await MessageModel.updateReadBy(roomId, userId);
       }, 1);
       res.json({ message: '채팅 불러오기에 성공했습니다.', data: result });
     } else {
