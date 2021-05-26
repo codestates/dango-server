@@ -30,9 +30,9 @@ schema.statics.getchatRoomsByUserId = async function (userId: string) {
     // TODO : 거래중 상태인지 확인 필요
     // 내가 거래완료를 눌렀는지, 상대방이 거래완료를 눌렀는지, :::: 메세지의 타입을 confirmed로 해서 채팅에 추가
     // 메세지에 confirmed 누가했는지 추가
+    console.log('userid', userId);
     const result = await this.aggregate([
       { $match: { _id: Types.ObjectId(userId) } },
-      { $set: { _id: userId } },
       {
         $unwind: '$talks',
       },
@@ -53,8 +53,10 @@ schema.statics.getchatRoomsByUserId = async function (userId: string) {
         },
       },
       {
-        $replaceWith: {
-          _id: '$_id',
+        $project: {
+          _id: {
+            $toString: '$_id',
+          },
           talks: '$talks',
           users: { $arrayElemAt: ['$chatRoomUsers.users', 0] },
           count: '$count.readBy',
@@ -62,6 +64,7 @@ schema.statics.getchatRoomsByUserId = async function (userId: string) {
       },
       {
         $project: {
+          _id: '$_id',
           roomId: '$talks',
           other: {
             $function: {
@@ -73,7 +76,6 @@ schema.statics.getchatRoomsByUserId = async function (userId: string) {
               lang: 'js',
             },
           },
-          // count: '$count',
           count: {
             $function: {
               body: function (countArr: any[], userId: string) {
@@ -102,7 +104,74 @@ schema.statics.getchatRoomsByUserId = async function (userId: string) {
     ]);
     return result;
   } catch (err) {
-    console.log(err)
+    console.log(err);
+  }
+};
+
+schema.statics.getTalents = async function (userId: string) {
+  try {
+    return await this.aggregate([
+      {
+        $match: { _id: Types.ObjectId(userId) },
+      },
+      {
+        $project: {
+          unreviewed: '$unreviewed',
+          reviewed: '$reviewed',
+          buying: '$buying._id',
+          selling: '$selling',
+        },
+      },
+      {
+        $project: {
+          dat: {
+            $function: {
+              body: function (u: string[], r: string[], b: string[], s: string[]) {
+                const arr1 = ['unreviewed', 'reviewed', 'buying', 'selling'];
+                const arr2 = [u, r, b, s];
+                return arr2.reduce((acc: any[], cur: string[], idx: number): any[] => {
+                  return [
+                    ...acc,
+                    ...cur.map((el) => {
+                      return {
+                        type: arr1[idx],
+                        talentId: el,
+                      };
+                    }),
+                  ];
+                }, []);
+              },
+              args: ['$unreviewed', '$reviewed', '$buying', '$selling'],
+              lang: 'js',
+            },
+          },
+        },
+      },
+      { $unwind: '$dat' },
+      {
+        $lookup: {
+          let: { talentObjId: { $toObjectId: '$dat.talentId' } },
+          from: 'talents',
+          pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$talentObjId'] } } }],
+          as: 'talent',
+        },
+      },
+      {
+        $project: {
+          _id: '$dat.talentId',
+          type: '$dat.type',
+          talent: {
+            ratings: 1,
+            title: 1,
+            address: 1,
+            category: 1,
+            price: 1,
+          },
+        },
+      },
+    ]);
+  } catch (err) {
+    console.log(err);
   }
 };
 
