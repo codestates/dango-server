@@ -15,5 +15,6 @@ export interface Review {
   nickname: string;
   rating: number;
   review: string;
+  date: string;
 }
 //talentId, userId, review, rating, nickname

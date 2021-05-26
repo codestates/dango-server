@@ -8,7 +8,7 @@ const schema: Schema<IUserDocument> = new Schema({
     id: { type: Number, required: false, unique: true },
     social: { type: String, required: true },
     name: { type: String, required: false },
-    email: { type: String, required: false, unique: true },
+    email: { type: String, required: false },
     image: { type: String, required: false },
   },
   selling: { type: [String], default: [] },
