@@ -56,4 +56,16 @@ export default class KakaoAuth {
       })
       .catch((e) => e);
   }
+  static async validate(token: string) {
+    return axios
+      .get('https://kapi.kakao.com/v1/user/access_token_info', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res: AxiosResponse) => {
+        return res.data;
+      })
+      .catch((e) => e);
+  }
 }
