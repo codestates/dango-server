@@ -31,7 +31,6 @@ export default async (req: Request, res: Response) => {
             image: config.defaultImage,
           },
         };
-        console.log(userInfo);
         const newUser = new UserModel(userInfo);
         newUser.save(async (err, user) => {
           console.log(err)
