@@ -37,7 +37,7 @@ const messageSchema: Schema<IMessageDocument> = new Schema(
 messageSchema.statics.getMessagesByRoomId = async function (
   roomId: string,
   userId: string,
-  options = { page: 0, limit: 5, skip: 0 },
+  options = { page: 0, limit: 10, skip: 0 },
 ) {
   try {
     // 나중에 유저id로 방 있는지 유효성체크

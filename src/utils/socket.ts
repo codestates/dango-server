@@ -30,7 +30,7 @@ class WebSockets {
             const otherClient = io.of('/').sockets.get(otherSocketId);
 
             // 방이름을 유일하게 하기 위해 두 사람의 _id를 더해서 유일한 방이름을 만든다.
-            const roomname = isSeller ? `${clientId}${otherId}` : `${otherId}${clientId}`
+            const roomname = [clientId, otherId].sort().join('');
 
             // 두사람만 들어가있는 방을 생성한다.
             otherClient?.join(roomname);
@@ -55,7 +55,8 @@ class WebSockets {
           io.sockets.in(`${otherId}${clientId}`).emit('messageFromOther', messageForm);
         } else {
           // 온라인 상태인 유저로부터 메세지를 받아왔지만 상대는 온라인이 아닌 경우
-          io.sockets.in(`${otherId}${clientId}`).emit('messageFromOther', messageForm);
+          client.emit('messageFromOther', messageForm);
+          // io.sockets.in(`${otherId}${clientId}`).emit('messageFromOther', messageForm);
         }
       });
 
