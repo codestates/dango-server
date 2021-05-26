@@ -3,7 +3,7 @@ const objectId = typeof mongoose.Schema.Types.ObjectId;
 
 // mongoose schema
 export interface User {
-  _id: string;
+  _id: objectId;
   nickname: string;
   socialData: {
     id: number;

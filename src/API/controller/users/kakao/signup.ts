@@ -19,20 +19,22 @@ export default async (req: Request, res: Response) => {
       if (data) {
         const {
           id,
-          properties,
           kakao_account: { email },
         } = data;
-        const newUser = new UserModel({
+        const userInfo = {
           nickname,
           socialData: {
             id,
             social: 'kakao',
-            name: properties && properties.nickname,
+            name: data.properties && data.properties.nickname,
             email: email,
             image: config.defaultImage,
           },
-        });
+        };
+        console.log(userInfo);
+        const newUser = new UserModel(userInfo);
         newUser.save(async (err, user) => {
+          console.log(err)
           const chatRooms = (await UserModel.getchatRoomsByUserId(user._id)) || null;
           res.send({
             message: '회원가입에 성공했습니다.',

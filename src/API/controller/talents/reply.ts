@@ -4,13 +4,13 @@ import TalentModel from '../../../models/talents';
 import UserModel from '../../../models/user';
 
 export default async (req: Request, res: Response) => {
-  const { talentId, userId, replyDescription, reviewId } = req.body;
+  const { talentId, userId, replyDescription, reviewId, replyDate } = req.body;
   try {
     const validUser = await UserModel.find({ _id: userId, selling: talentId }).select('nickname _id').lean();
     if (validUser.length > 0) {
       const newReply = {
         replyDescription,
-        replyDate: Date.now(),
+        replyDate,
       };
       const saveReply = await TalentModel.findOneAndUpdate(
         { _id: talentId, 'reviews.reviewId': reviewId },

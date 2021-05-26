@@ -16,10 +16,10 @@ const schema = new Schema<Talent>({
       nickname: { type: String, required: true },
       rating: { type: Number, required: true },
       review: { type: String, required: true },
-      date: { type: Date, default: Date.now() },
+      date: { type: String, required: true },
       reply: {
         replyDescription: { type: String, required: false },
-        replyDate: { type: Date, required: false },
+        replyDate: { type: String, required: false },
         required: false,
       },
       required: false,

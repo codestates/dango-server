@@ -5,7 +5,7 @@ import UserModel from '../../../models/user';
 
 export default async (req: Request, res: Response) => {
   const data: Review = req.body;
-  const { talentId, userId, review, rating, nickname } = data;
+  const { talentId, userId, review, rating, nickname, date } = data;
   try {
     /**
      * 유효한 유저인지 확인(unreviewed에 talentId 존재하는지 확인)
@@ -23,6 +23,7 @@ export default async (req: Request, res: Response) => {
         nickname,
         rating,
         review,
+        date,
       };
       const updatedTalent = await TalentModel.updateOne(
         { _id: talentId },
@@ -47,7 +48,6 @@ export default async (req: Request, res: Response) => {
     } else {
       res.status(404).json({ message: '유효하지 않은 유저입니다.' });
     }
-
   } catch (err) {
     res.status(500).json({ message: '서버 응답에 실패했습니다.' });
     console.log(err);

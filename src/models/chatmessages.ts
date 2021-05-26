@@ -106,7 +106,7 @@ messageSchema.statics.getMessagesByRoomId = async function (
 
 messageSchema.statics.updateReadBy = async function (roomId: string, userId: string) {
   try {
-    await this.updateMany(
+    return await this.updateMany(
       {
         roomId,
         'readBy.readUser': { $ne: userId },
