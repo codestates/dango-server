@@ -5,7 +5,8 @@ import GoogleAuth from '../../../service/google';
 import KakaoAuth from '../../../service/kakao';
 
 export default async (req: Request, res: Response) => {
-  const { token, social } = req.body;
+  const { social } = req.body;
+  const token = req.headers.authorization?.split(' ')[1]!;
   try {
     if (social === 'google') {
       const googleUserInfo = await GoogleAuth.getGoogleProfile(token);
