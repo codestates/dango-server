@@ -74,6 +74,7 @@ export interface Reply {
 export interface ChatRoom {
   _id: string;
   others: string[];
+  talentId: string;
   type: string;
   initiator: string;
 }
