@@ -7,6 +7,7 @@ const schema: Schema<IChatRoomDocument> = new Schema(
   {
     _id: { type: String, default: () => uuidv4().replace(/\-/g, '') },
     users: [String],
+    talentId: String,
     type: { type: String, default: '1 to 1' },
     initiator: { type: String, required: true },
   },
@@ -19,6 +20,7 @@ const schema: Schema<IChatRoomDocument> = new Schema(
 schema.statics.generateChatRooms = async function (userId: string, otherId: string, talentId: string) {
   try {
     const newRoom = await this.create({
+      talentId,
       users: [otherId, userId],
       initiator: userId,
     });

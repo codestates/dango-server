@@ -58,14 +58,18 @@ schema.statics.getchatRoomsByUserId = async function (userId: string) {
             $toString: '$_id',
           },
           talks: '$talks',
+          talentId: { $arrayElemAt: ['$chatRoomUsers.talentId', 0] },
           users: { $arrayElemAt: ['$chatRoomUsers.users', 0] },
+
           count: '$count.readBy',
         },
       },
+
       {
         $project: {
           _id: '$_id',
           roomId: '$talks',
+          talentId: 1,
           other: {
             $function: {
               body: function (usersArr: string[], userId: string) {
@@ -95,10 +99,41 @@ schema.statics.getchatRoomsByUserId = async function (userId: string) {
         },
       },
       {
-        $replaceWith: {
-          roomId: '$roomId',
-          other: '$other',
-          count: '$count',
+        $project: {
+          _id: 0,
+          roomId: 1,
+          count: 1,
+          talentId: 1,
+          other: {
+            $toObjectId: '$other',
+          },
+        },
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'other',
+          foreignField: '_id',
+          as: 'other',
+        },
+      },
+      {
+        $project: {
+          roomId: 1,
+          count: 1,
+          talentId: 1,
+          otherNickname: '$other.nickname',
+          profileImage: '$other.socialData.image',
+        },
+      },
+      {
+        $project: {
+          roomId: 1,
+          talentId: 1,
+          talks: 1,
+          count: 1,
+          otherNickname: { $arrayElemAt: ['$otherNickname', 0] },
+          profileImage: { $arrayElemAt: ['$profileImage', 0] },
         },
       },
     ]);
