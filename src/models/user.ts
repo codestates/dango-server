@@ -116,19 +116,19 @@ schema.statics.getTalents = async function (userId: string) {
       },
       {
         $project: {
-          unreviewed: '$unreviewed',
-          reviewed: '$reviewed',
-          buying: '$buying._id',
-          selling: '$selling',
+          reg: 1,
+          unreviewed: 1,
+          reviewed: 1,
+          selling: 1,
         },
       },
       {
         $project: {
           dat: {
             $function: {
-              body: function (u: string[], r: string[], b: string[], s: string[]) {
-                const arr1 = ['unreviewed', 'reviewed', 'buying', 'selling'];
-                const arr2 = [u, r, b, s];
+              body: function (u: string[], r: string[], s: string[], reg: string) {
+                const arr1 = ['unreviewed', 'reviewed', 'selling'];
+                const arr2 = [u, r, s];
                 return arr2.reduce((acc: any[], cur: string[], idx: number): any[] => {
                   return [
                     ...acc,
@@ -136,12 +136,13 @@ schema.statics.getTalents = async function (userId: string) {
                       return {
                         type: arr1[idx],
                         talentId: el,
+                        reg,
                       };
                     }),
                   ];
                 }, []);
               },
-              args: ['$unreviewed', '$reviewed', '$buying', '$selling'],
+              args: ['$unreviewed', '$reviewed', '$selling', '$reg'],
               lang: 'js',
             },
           },
@@ -161,11 +162,14 @@ schema.statics.getTalents = async function (userId: string) {
           _id: '$dat.talentId',
           type: '$dat.type',
           talent: {
-            ratings: 1,
             title: 1,
             address: 1,
             category: 1,
             price: 1,
+            reviews: {
+              _id: 1,
+              rating: 1,
+            },
           },
         },
       },

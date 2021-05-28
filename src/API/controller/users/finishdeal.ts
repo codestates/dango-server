@@ -22,7 +22,6 @@ export default async (req: Request, res: Response) => {
 
     const isSeller = await UserModel.find({ _id: userId, selling: talentId }).select('nickname').lean();
 
-
     if (isSeller.length > 0) {
       // 판매자인 경우 구매자 아이디를 가져옴
       const id = await ChatRoomModel.find({ _id: chatroomId }).select('initiator').lean();
@@ -36,6 +35,7 @@ export default async (req: Request, res: Response) => {
       {
         $addToSet: { 'buying.$.confirmed': userId },
       },
+      { new: true },
     )
       .select('buying')
       .lean();
