@@ -1,6 +1,6 @@
 import { KakaoHeader } from './../@types/service.d';
 import axios, { AxiosResponse } from 'axios';
-import config from '../config/index';
+import config from '../config/key';
 
 export default class KakaoAuth {
   static async getTokenWithCode(code: string) {

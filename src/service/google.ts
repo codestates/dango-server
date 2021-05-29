@@ -1,5 +1,5 @@
 import { OAuth2Client } from 'google-auth-library';
-import config from '../config/index';
+import config from '../config/key';
 
 export default class GoogleAuth {
   static async getGoogleProfile(IdToken: string) {

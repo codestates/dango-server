@@ -2,7 +2,7 @@ import express, { Application } from 'express';
 import cors from 'cors';
 import cookieparser from 'cookie-parser';
 import mylogger from '../API/middleware/mylogger';
-import config from '../config/index';
+import config from '../config/key';
 
 export default ({ app }: { app: Application }) => {
   app.use(express.json());

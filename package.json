@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon"
+    "start": "nodemon",
+    "pr":"NODE_ENV=production ts-node --transpile-only ./src/bin/www.ts",
+    "pm2": "pm2 start ./src/bin/www.ts --watch"
   },
   "repository": {
     "type": "git",
