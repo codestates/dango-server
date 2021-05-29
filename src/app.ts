@@ -25,7 +25,7 @@ app.get('/', (req: Request, res: Response) => {
 
 // ---------------------------------TEST ENDPOINT---------------------------------- //
 // ---------------------------------TEST ENDPOINT---------------------------------- //
-// ---------------------------------TEST ENDPOINT---------------------------------- //
+
 import ChatRoomModel from './models/chatrooms';
 import MessageModel from './models/chatmessages';
 import UserModel from './models/user';
@@ -39,6 +39,9 @@ app.get('/test', async (req: Request, res: Response) => {
   // res.json({ message: 'success', data: a });
   res.json({ message: 'success', data: b });
 });
+
+// ---------------------------------TEST ENDPOINT---------------------------------- //
+// ---------------------------------TEST ENDPOINT---------------------------------- //
 
 // 404
 app.use('*', (req, res) => {
