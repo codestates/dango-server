@@ -19,4 +19,7 @@ export default {
   defaultImage: process.env.PROD_DEFAULT_USER_IMAGE,
   googleSecret: process.env.PROD_GOOGLE_SECRET,
   googleClientKey: process.env.PROD_GOOGLE_CLIENT_ID,
+  bucketRegion: process.env.PROD_AWS_BUCKET_REGION,
+  bucketKeyId: process.env.PROD_AWS_ACCESS_KEY_ID,
+  bucketAccessKey: process.env.PROD_AWS_SECRET_ACCESS_KEY,
 };

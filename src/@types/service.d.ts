@@ -35,19 +35,42 @@ export interface WithdrawKakao {
 }
 
 export interface GooglePayload {
-  iss: string,
-  azp: string,
-  aud: string,
-  sub: string,// identifier
-  email: string,
-  email_verified: true,
-  at_hash: string,
-  name: string,
-  picture: string,
-  given_name: string,
-  family_name: string,
-  locale: string,
-  iat: number,
-  exp: number,
+  iss: string;
+  azp: string;
+  aud: string;
+  sub: string; // identifier
+  email: string;
+  email_verified: true;
+  at_hash: string;
+  name: string;
+  picture: string;
+  given_name: string;
+  family_name: string;
+  locale: string;
+  iat: number;
+  exp: number;
   // jti: string
+}
+
+export interface S3Payload {
+  fieldname: string;
+  originalname: string;
+  encoding: string;
+  mimetype: string;
+  transforms: [
+    {
+      id: string;
+      size: number;
+      bucket: string;
+      key: stirng;
+      acl: string;
+      contentType: string;
+      contentDisposition: any | null;
+      storageClass: stirng;
+      serverSideEncryption: any | null;
+      metadata: any | null;
+      location: string;
+      etag: string;
+    },
+  ];
 }
