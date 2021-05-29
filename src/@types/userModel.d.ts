@@ -8,5 +8,5 @@ export interface IUserDocument extends User, Document { }
 // statics
 export interface IUserModel extends Model<IUserDocument> {
   getchatRoomsByUserId: (userId: string) => Promise<IUserDocument>;
-  getTalents: (userId: string) => Promise<IUserDocument>;
+  getTalents: (userId: string) => Promise<any>;
 }

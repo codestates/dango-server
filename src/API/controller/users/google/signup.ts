@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import UserModel from '../../../../models/user';
 import GoogleAuth from '../../../../service/google';
-import config from '../../../../config/index';
+import config from '../../../../config/key';
 
 export default async (req: Request, res: Response) => {
   const IdToken: string = req.headers.authorization?.split(' ')[1]!;

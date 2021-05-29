@@ -5,15 +5,15 @@ export default async (req: Request, res: Response) => {
   const userId = req.body.id;
   const { page, skip, limit } = req.body;
   const roomId: string = req.params.roomId;
-  console.log(userId, page, skip, limit, roomId)
+  console.log(userId, page, skip, limit, roomId);
   try {
     let result = null;
-    if (page && skip && limit) {
+    if (page >= 0 && skip >= 0 && limit >= 0) {
       result = await MessageModel.getMessagesByRoomId(roomId, userId, { page, skip, limit });
     } else {
       result = await MessageModel.getMessagesByRoomId(roomId, userId);
     }
-    console.log(result)
+    console.log(result);
     if (result) {
       setTimeout(async () => {
         await MessageModel.updateReadBy(roomId, userId);

@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import { Db } from 'mongodb';
-import config from '../config/index';
+import config from '../config/key';
 import UserModel from '../models/user';
 import TalentModel from '../models/talents';
 import { fakeTalent, fakeUser } from '../common/fakeData/models';

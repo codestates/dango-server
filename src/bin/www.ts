@@ -1,5 +1,5 @@
 import app from '../app';
-import config from '../config/index';
+import config from '../config/key';
 import { Server } from 'socket.io';
 import WebSockets from '../utils/socket';
 

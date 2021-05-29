@@ -2,7 +2,7 @@ import { KakaoUserInfo } from './../../../../@types/service.d';
 import { Request, Response } from 'express';
 import UserModel from '../../../../models/user';
 import KakaoAuth from '../../../../service/kakao';
-import config from '../../../../config';
+import config from '../../../../config/key';
 
 export default async (req: Request, res: Response) => {
   const accessToken: string = req.headers.authorization?.split(' ')[1]!;
