@@ -1,6 +1,6 @@
 import { User } from './../@types/index.d';
 import { Schema, model, Types } from 'mongoose';
-import { IUserDocument, IUserModel } from '../@types/userModel';
+import { IBuyingArr, IUserDocument, IUserModel } from '../@types/userModel';
 
 const schema: Schema<IUserDocument> = new Schema({
   nickname: { type: String, required: true, unique: true },
@@ -53,23 +53,63 @@ schema.statics.getchatRoomsByUserId = async function (userId: string) {
         },
       },
       {
+        $lookup: {
+          from: 'users',
+          localField: '_id',
+          foreignField: '_id',
+          as: 'myInfo',
+        },
+      },
+      {
         $project: {
           _id: {
             $toString: '$_id',
           },
-          talks: '$talks',
+          talks: 1,
+          myInfo: { $arrayElemAt: ['$myInfo', 0] },
           talentId: { $arrayElemAt: ['$chatRoomUsers.talentId', 0] },
           users: { $arrayElemAt: ['$chatRoomUsers.users', 0] },
-
           count: '$count.readBy',
         },
       },
-
       {
         $project: {
-          _id: '$_id',
+          _id: 1,
+          talks: 1,
+          users: 1,
+          talentId: 1,
+          myInfo: {
+            _id: {
+              $toString: '$myInfo._id',
+            },
+            buying: '$myInfo.buying',
+          },
+          count: 1,
+        },
+      },
+      {
+        $project: {
+          _id: 1,
           roomId: '$talks',
           talentId: 1,
+          clickPurchase: {
+            $function: {
+              body: function (buyingArr: IBuyingArr[], talentId: string, userId: string) {
+                const confirmedArr = buyingArr.find((el) => el._id === talentId)?.confirmed;
+                if (confirmedArr) {
+                  return confirmedArr.length >= 2
+                    ? [true, true]
+                    : confirmedArr.length === 0
+                      ? [false, false]
+                      : confirmedArr.indexOf(userId) !== -1
+                        ? [true, false]
+                        : [false, false];
+                }
+              },
+              args: ['$myInfo.buying', '$talentId', '$_id'],
+              lang: 'js',
+            },
+          },
           other: {
             $function: {
               body: function (usersArr: string[], userId: string) {
@@ -102,6 +142,7 @@ schema.statics.getchatRoomsByUserId = async function (userId: string) {
         $project: {
           _id: 0,
           roomId: 1,
+          clickPurchase: 1,
           count: 1,
           talentId: 1,
           other: {
@@ -122,6 +163,7 @@ schema.statics.getchatRoomsByUserId = async function (userId: string) {
           roomId: 1,
           count: 1,
           talentId: 1,
+          clickPurchase: 1,
           otherId: '$other._id',
           otherNickname: '$other.nickname',
           profileImage: '$other.socialData.image',
@@ -133,6 +175,7 @@ schema.statics.getchatRoomsByUserId = async function (userId: string) {
           talentId: 1,
           talks: 1,
           count: 1,
+          clickPurchase: 1,
           otherId: { $arrayElemAt: ['$otherId', 0] },
           otherNickname: { $arrayElemAt: ['$otherNickname', 0] },
           profileImage: { $arrayElemAt: ['$profileImage', 0] },

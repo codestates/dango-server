@@ -1,7 +1,6 @@
 import { User } from './index.d';
 import mongoose, { Schema, Document, Model } from 'mongoose';
 
-
 // methods
 export interface IUserDocument extends User, Document { }
 
@@ -9,4 +8,11 @@ export interface IUserDocument extends User, Document { }
 export interface IUserModel extends Model<IUserDocument> {
   getchatRoomsByUserId: (userId: string) => Promise<IUserDocument>;
   getTalents: (userId: string) => Promise<any>;
+}
+
+// others
+
+export interface IBuyingArr {
+  confirmed: string[];
+  _id: string;
 }

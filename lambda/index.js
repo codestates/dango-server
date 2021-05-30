@@ -15,8 +15,6 @@ const s3 = new aws.S3(config);
 
 // image setting
 const sizes = [300, 600];
-const originalImageKeyPrefix = 'image';
-const resizedImageKeyPrefix = 'copy';
 
 ////// methods ///////
 
