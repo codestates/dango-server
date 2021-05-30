@@ -55,11 +55,12 @@ export default async (req: Request, res: Response) => {
         ).lean();
         // unreviewed로 이동하고 거래완료 메세지 표시
         MessageModel.createPost(chatroomId, '거래가 완료됐습니다.', userId, true);
+        res.json({ message: '거래가 완료됐습니다.', confirmed: true });
       } else {
         // confirm한 상대의 id를 채팅에 저장
         MessageModel.createPost(chatroomId, '거래 완료를 눌러주세요', userId, true);
+        res.json({ message: '거래완료 요청에 성공했습니다.', confirmed: false });
       }
-      res.send({ message: '' });
     } else {
       res.status(500).json({ message: '서버 응답에 실패했습니다.' });
     }
