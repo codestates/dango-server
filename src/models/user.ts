@@ -53,11 +53,23 @@ schema.statics.getchatRoomsByUserId = async function (userId: string) {
         },
       },
       {
+        $project: {
+          talks: 1,
+          chatRoomUsers: 1,
+          count: 1,
+          buyerId: {
+            $toObjectId: {
+              $arrayElemAt: ['$chatRoomUsers.initiator', 0],
+            },
+          },
+        },
+      },
+      {
         $lookup: {
           from: 'users',
-          localField: '_id',
+          localField: 'buyerId',
           foreignField: '_id',
-          as: 'myInfo',
+          as: 'buyerId',
         },
       },
       {
@@ -66,7 +78,7 @@ schema.statics.getchatRoomsByUserId = async function (userId: string) {
             $toString: '$_id',
           },
           talks: 1,
-          myInfo: { $arrayElemAt: ['$myInfo', 0] },
+          buyerId: { $arrayElemAt: ['$buyerId', 0] },
           talentId: { $arrayElemAt: ['$chatRoomUsers.talentId', 0] },
           users: { $arrayElemAt: ['$chatRoomUsers.users', 0] },
           count: '$count.readBy',
@@ -78,11 +90,11 @@ schema.statics.getchatRoomsByUserId = async function (userId: string) {
           talks: 1,
           users: 1,
           talentId: 1,
-          myInfo: {
+          buyerId: {
             _id: {
-              $toString: '$myInfo._id',
+              $toString: '$buyerId._id',
             },
-            buying: '$myInfo.buying',
+            buying: '$buyerId.buying',
           },
           count: 1,
         },
@@ -104,9 +116,11 @@ schema.statics.getchatRoomsByUserId = async function (userId: string) {
                       : confirmedArr.indexOf(userId) !== -1
                         ? [true, false]
                         : [false, false];
+                } else {
+                  return [true, true];
                 }
               },
-              args: ['$myInfo.buying', '$talentId', '$_id'],
+              args: ['$buyerId.buying', '$talentId', '$_id'],
               lang: 'js',
             },
           },
@@ -196,7 +210,6 @@ schema.statics.getTalents = async function (userId: string) {
       },
       {
         $project: {
-          reg: 1,
           unreviewed: 1,
           reviewed: 1,
           selling: 1,
@@ -206,7 +219,7 @@ schema.statics.getTalents = async function (userId: string) {
         $project: {
           dat: {
             $function: {
-              body: function (u: string[], r: string[], s: string[], reg: string) {
+              body: function (u: string[], r: string[], s: string[]) {
                 const arr1 = ['unreviewed', 'reviewed', 'selling'];
                 const arr2 = [u, r, s];
                 return arr2.reduce((acc: any[], cur: string[], idx: number): any[] => {
@@ -216,13 +229,12 @@ schema.statics.getTalents = async function (userId: string) {
                       return {
                         type: arr1[idx],
                         talentId: el,
-                        reg,
                       };
                     }),
                   ];
                 }, []);
               },
-              args: ['$unreviewed', '$reviewed', '$selling', '$reg'],
+              args: ['$unreviewed', '$reviewed', '$selling'],
               lang: 'js',
             },
           },
@@ -248,6 +260,7 @@ schema.statics.getTalents = async function (userId: string) {
             price: 1,
             reviews: {
               _id: 1,
+              reviewId: 1,
               rating: 1,
             },
           },
