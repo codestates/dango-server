@@ -1,10 +1,8 @@
-/*
-import { Request, NextFunction, Response } from 'express';
+import { Request } from 'express';
 import multer from 'multer';
+import multers3 from 'multer-s3';
 import aws from 'aws-sdk';
-import multers3 from 'multer-s3-transform';
-import sharp from 'sharp';
-import path from 'path';
+
 import config from '../config/key';
 
 // 파일 저장 위치
@@ -21,20 +19,6 @@ const storage = multers3({
   s3,
   bucket: 'dango/image/original',
   contentType: multers3.AUTO_CONTENT_TYPE,
-  shouldTransform: true,
-  transforms: [
-    {
-      id: 'resized',
-      key: function (req: any, file: Express.Multer.File, cb: any) {
-        let extension = path.extname(file.originalname);
-        cb(null, Date.now().toString() + extension);
-      },
-      transform: function (req: any, file: Express.Multer.File, cb: any) {
-        cb(null, sharp().resize({ width: 100, fit: sharp.fit.contain }));
-      },
-    },
-  ],
-  acl: 'public-read-write',
 });
 
 // 파일 필터링
@@ -72,4 +56,3 @@ function mimeTypeValidator(type: string) {
 const upload = multer({ fileFilter, storage, limits }).array('file', 3);
 
 export default upload;
-*/

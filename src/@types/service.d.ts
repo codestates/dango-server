@@ -1,3 +1,4 @@
+import { S3Payload } from './service.d';
 export interface KakaoHeader {
   [grant_type: string]: string;
   [client_id: string]: string;
@@ -52,7 +53,7 @@ export interface GooglePayload {
   // jti: string
 }
 
-export interface S3Payload {
+export interface transformS3Payload {
   fieldname: string;
   originalname: string;
   encoding: string;
@@ -73,4 +74,23 @@ export interface S3Payload {
       etag: string;
     },
   ];
+}
+
+export interface S3Payload {
+  fieldname: stirng;
+  originalname: string;
+  encoding: string;
+  mimetype: string;
+  size: number;
+  bucket: string;
+  key: string;
+  acl: string;
+  contentType: string;
+  contentDisposition: any | null;
+  storageClass: string;
+  serverSideEncryption: any | null;
+  metadata: any | null;
+  location: string;
+  etag: string;
+  versionId: any | undefined;
 }

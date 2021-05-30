@@ -1,5 +1,5 @@
-import { Request, NextFunction, Response, Express } from 'express';
-import upload from '../../lib/multerS3resize';
+import { Request, NextFunction, Response } from 'express';
+import upload from '../../lib/multerS3';
 
 export default (req: Request, res: Response, next: NextFunction) => {
   try {
