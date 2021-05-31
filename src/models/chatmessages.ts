@@ -130,7 +130,7 @@ messageSchema.statics.createPost = async function (
 
     const createdResult = await this.create({
       roomId,
-      message,
+      message: isStart ? '거래가 시작됐습니다.' : message,
       type: confirm ? 'confirm' : isStart ? 'start' : 'text',
       postedBy,
       readBy: { readUser: postedBy },
