@@ -24,7 +24,7 @@ export default async (req: Request, res: Response) => {
           selling: result.selling,
           buying: result.buying.map((el) => el && el._id),
           unreviewed: result.unreviewed,
-          reviewed: result.reviewed,
+          reviewed: result.reviewed.map(el => el && el._id),
           nickname: result.nickname,
         });
       } else {
