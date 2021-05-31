@@ -25,23 +25,40 @@ export default async (req: Request, res: Response) => {
         review,
         date,
       };
-      const updatedTalent = await TalentModel.updateOne(
+      const updatedResult = await TalentModel.findOneAndUpdate(
         { _id: talentId },
         { $push: { reviews: newReview }, $inc: { 'rating.0': rating, 'rating.1': 1 } },
-      );
-      if (updatedTalent.nModified >= 1) {
-        await UserModel.updateOne(
-          { _id: userId },
-          {
-            $pull: {
-              unreviewed: talentId,
+        { new: true },
+      )
+        .select('reviews')
+        .lean();
+      console.log('reviews', updatedResult);
+      if (updatedResult) {
+        const matchReview = updatedResult.reviews.find((el) => {
+          if (el._id.toString() === userId && el.nickname === nickname && el.rating === rating) {
+            return true;
+          }
+        });
+        console.log('matchReview', matchReview);
+        if (matchReview) {
+          await UserModel.updateOne(
+            { _id: userId },
+            {
+              $pull: {
+                unreviewed: talentId,
+              },
+              $push: {
+                reviewed: {
+                  _id: talentId,
+                  reviewId: matchReview.reviewId,
+                },
+              },
             },
-            $push: {
-              reviewed: talentId,
-            },
-          },
-        );
-        res.json({ message: '리뷰 쓰기에 성공했습니다.' });
+          );
+          res.json({ message: '리뷰 쓰기에 성공했습니다.' });
+        } else {
+          res.status(500).json({ message: '서버 응답에 실패했습니다.' });
+        }
       } else {
         res.status(500).json({ message: '서버 응답에 실패했습니다.' });
       }
@@ -53,3 +70,8 @@ export default async (req: Request, res: Response) => {
     console.log(err);
   }
 };
+
+/**
+ * 탤런트별 리뷰 여러개 존재
+ *
+ */

@@ -15,7 +15,7 @@ export interface User {
   selling: string[];
   buying: [{ _id: string; confirmed: string[] }];
   unreviewed: string[];
-  reviewed: string[];
+  reviewed: [{ _id: string; reviewId: string }];
   talks: string[];
 }
 
