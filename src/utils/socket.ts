@@ -43,28 +43,44 @@ class WebSockets {
       });
 
       // 상대방에게 메세지 보내기
-      client.on('messageToOther', async (otherId: string, message: string, roomId: string) => {
-        // 두 유저의 아이디를 받아와서 메세지를 그 방에 뿌려준다.
-        // 누구의 아이디가 앞에있는지 모르므로 두번 체크한다.
-        const messageForm = await MessageModel.createPost(roomId, message, clientId);
-        console.log(messageForm);
-        if (client.rooms.has(`${clientId}${otherId}`)) {
-          // 다른 사람이 온라인이면 읽음처리를 해줘야됨.
-          io.sockets.in(`${clientId}${otherId}`).emit('messageFromOther', messageForm);
-        } else if (client.rooms.has(`${otherId}${clientId}`)) {
-          io.sockets.in(`${otherId}${clientId}`).emit('messageFromOther', messageForm);
-        } else {
-          // 온라인 상태인 유저로부터 메세지를 받아왔지만 상대는 온라인이 아닌 경우
-          client.emit('messageFromOther', messageForm);
-          // io.sockets.in(`${otherId}${clientId}`).emit('messageFromOther', messageForm);
-        }
-      });
+      client.on(
+        'messageToOther',
+        async (otherId: string, message: string, roomId: string, isStart: boolean | undefined) => {
+          // 두 유저의 아이디를 받아와서 메세지를 그 방에 뿌려준다.
+          // 누구의 아이디가 앞에있는지 모르므로 두번 체크한다.
+
+          if (isStart) {
+            // 새로운 채팅방 요청 응답
+            const messageForm = await MessageModel.createPost(roomId, message, clientId, undefined, true);
+            const roomname = [clientId, otherId].sort().join('');
+            if (client.rooms.has(roomname)) {
+              io.sockets.in(roomname).emit('messageFromOther', messageForm);
+            } else {
+              client.emit('messageFromOther', messageForm);
+            }
+          } else {
+            // 지속적인 채팅방 요청응답
+            const messageForm = await MessageModel.createPost(roomId, message, clientId);
+            console.log(messageForm);
+            if (client.rooms.has(`${clientId}${otherId}`)) { /////////////////////////// 나중에 join(talentId) 추가해야됨.
+              // 다른 사람이 온라인이면 읽음처리를 해줘야됨.
+              io.sockets.in(`${clientId}${otherId}`).emit('messageFromOther', messageForm);
+            } else if (client.rooms.has(`${otherId}${clientId}`)) {
+              io.sockets.in(`${otherId}${clientId}`).emit('messageFromOther', messageForm);
+            } else {
+              // 온라인 상태인 유저로부터 메세지를 받아왔지만 상대는 온라인이 아닌 경우
+              client.emit('messageFromOther', messageForm);
+              // io.sockets.in(`${otherId}${clientId}`).emit('messageFromOther', messageForm);
+            }
+          }
+        },
+      );
 
       client.on('updateReadBy', async (roomId, otherId) => {
         await MessageModel.updateReadBy(roomId, otherId);
       });
       // 내가 채팅방 안에 있을 때 메세지가 오면 읽음 요청을 보내야되요
-      // 내가 메세지를 읽으면 상대방입장에선 상대방이 채팅방 안에있을때 1을 없애야되고,
+      // 내가 메세지를 읽으면 상대방입장에선 상대방이 채팅방 안에있을때 1을 없애야되고,.... advanced
       client.on('disconnect', () => {
         this.users.delete(clientId);
         client.rooms.clear();

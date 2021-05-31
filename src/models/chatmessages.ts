@@ -122,7 +122,8 @@ messageSchema.statics.createPost = async function (
   roomId: string,
   message: string,
   postedBy: string,
-  confirm: boolean,
+  confirm?: boolean,
+  isStart?: boolean,
 ) {
   try {
     // 저장
@@ -130,7 +131,7 @@ messageSchema.statics.createPost = async function (
     const createdResult = await this.create({
       roomId,
       message,
-      type: confirm ? 'confirm' : 'text',
+      type: confirm ? 'confirm' : isStart ? 'start' : 'text',
       postedBy,
       readBy: { readUser: postedBy },
     });
