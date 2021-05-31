@@ -19,7 +19,12 @@ const schema: Schema<IUserDocument> = new Schema({
     },
   ],
   unreviewed: { type: [String], default: [] },
-  reviewed: { type: [String], default: [] },
+  reviewed: [
+    {
+      _id: String,
+      reviewId: String,
+    },
+  ],
   talks: { type: [String], default: [] },
 });
 
@@ -211,12 +216,14 @@ schema.statics.getTalents = async function (userId: string) {
       {
         $project: {
           unreviewed: 1,
-          reviewed: 1,
           selling: 1,
+          reviewed: '$reviewed._id',
+          myReviews: "$reviewed.reviewId"
         },
       },
       {
         $project: {
+          myReviews: 1,
           dat: {
             $function: {
               body: function (u: string[], r: string[], s: string[]) {
@@ -252,6 +259,7 @@ schema.statics.getTalents = async function (userId: string) {
       {
         $project: {
           _id: '$dat.talentId',
+          myReviews: 1,
           type: '$dat.type',
           talent: {
             title: 1,
