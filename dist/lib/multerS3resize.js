@@ -1,3 +1,4 @@
+"use strict";
 /*
 import { Request, NextFunction, Response } from 'express';
 import multer from 'multer';
@@ -72,4 +73,4 @@ function mimeTypeValidator(type: string) {
 const upload = multer({ fileFilter, storage, limits }).array('file', 3);
 
 export default upload;
-*/
+*/ 
