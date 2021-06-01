@@ -30,6 +30,9 @@ export default async (req: Request, res: Response) => {
           };
           const newUser = new UserModel(userInfo);
           newUser.save(async (err, user) => {
+            if (err) {
+              return res.status(404).json({ message: "유저정보 저장에 실패했습니다." })
+            }
             const chatRooms = (await UserModel.getchatRoomsByUserId(user._id)) || null;
             res.status(200).send({
               message: '회원가입에 성공했습니다.',

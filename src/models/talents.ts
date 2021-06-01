@@ -14,7 +14,7 @@ const schema = new Schema<Talent>({
       _id: { type: Schema.Types.ObjectId, ref: 'users' },
       reviewId: { type: String, default: () => uuidv4().replace(/\-/g, '') },
       nickname: { type: String, required: true },
-      rating: { type: Number, required: true },
+      rating: { type: Number, required: true, default: [0, 0] },
       review: { type: String, required: true },
       date: { type: String, required: true },
       reply: {
