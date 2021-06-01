@@ -1,9 +1,8 @@
 import dotenv from 'dotenv';
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
-
-const envFound = dotenv.config();
-
+const envFound = dotenv.config({ path: __dirname + '/./../../.env' });
+console.log(envFound);
 if (envFound.error) {
   // This error should crash whole process
 
