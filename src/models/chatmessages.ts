@@ -103,15 +103,15 @@ messageSchema.statics.getMessagesByRoomId = async function (
     console.log(err);
   }
 };
-
+// Need $push Test 
 messageSchema.statics.updateReadBy = async function (roomId: string, userId: string) {
   try {
-    return await this.updateMany(
+    return await this.updateOne(
       {
         roomId,
         'readBy.readUser': { $ne: userId },
       },
-      { $addToSet: { readBy: { readUser: userId } } }, // 오류는 뜨지만 된다?
+      { $push: { readBy: { readUser: userId } } },
     );
   } catch (err) {
     console.log(err);
