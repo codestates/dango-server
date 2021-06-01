@@ -10,7 +10,6 @@ export default async (req: Request, res: Response) => {
     const talentData = await UserModel.getTalents(userId);
     if (talentData) {
       let reviewIds = talentData[0]?.myReviews;
-
       const devided = talentData.reduce(
         (acc: any[], cur: any) => {
           return {
@@ -23,7 +22,7 @@ export default async (req: Request, res: Response) => {
                 reviews: cur.talent[0].reviews.find((el: any) => {
                   const idx = reviewIds.indexOf(el.reviewId);
                   if (idx !== -1) {
-                    reviewIds.splice(idx, idx);
+                    reviewIds.splice(idx, 1);
                     return true;
                   }
                 })?.rating
