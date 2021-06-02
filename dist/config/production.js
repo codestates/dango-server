@@ -23,4 +23,5 @@ exports.default = {
     bucketRegion: process.env.PROD_AWS_BUCKET_REGION,
     bucketKeyId: process.env.PROD_AWS_ACCESS_KEY_ID,
     bucketAccessKey: process.env.PROD_AWS_SECRET_ACCESS_KEY,
+    bucketName: process.env.PROD_AWS_BUCKET_NAME
 };

@@ -36,7 +36,7 @@ exports.default = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 review,
                 date,
             };
-            const updatedResult = yield talents_1.default.findOneAndUpdate({ _id: talentId }, { $push: { reviews: newReview }, $inc: { 'rating.0': rating, 'rating.1': 1 } }, { new: true })
+            const updatedResult = yield talents_1.default.findOneAndUpdate({ _id: talentId }, { $push: { reviews: newReview }, $inc: { 'ratings.0': rating, 'ratings.1': 1 } }, { new: true })
                 .select('reviews')
                 .lean();
             console.log('reviews', updatedResult);
