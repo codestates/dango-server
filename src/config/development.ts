@@ -21,4 +21,5 @@ export default {
   bucketRegion: process.env.AWS_BUCKET_REGION,
   bucketKeyId: process.env.AWS_ACCESS_KEY_ID,
   bucketAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  bucketName: process.env.AWS_BUCKET_NAME
 };
