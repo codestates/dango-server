@@ -29,7 +29,7 @@ exports.default = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 const { _id, nickname, socialData: { email, image }, } = el._id;
                 return Object.assign(Object.assign({}, el), { _id, socialData: { email, image } });
             });
-            res.json(Object.assign(Object.assign({}, result), { reviews: newReviews, ratings: [result.ratings[0] / result.ratings[1], result.ratings[1]] }));
+            res.json(Object.assign(Object.assign({}, result), { reviews: newReviews, ratings: [result.ratings[0] === 0 ? 0 : result.ratings[0] / result.ratings[1], result.ratings[1]] }));
         }
         else {
             res.status(404).json({ message: '재능 정보를 찾을 수 없습니다.' });

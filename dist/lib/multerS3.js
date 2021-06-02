@@ -18,7 +18,7 @@ aws_sdk_1.default.config.update({
 const s3 = new aws_sdk_1.default.S3({});
 const storage = multer_s3_1.default({
     s3,
-    bucket: 'dango/image/original',
+    bucket: `${key_1.default.bucketName}/image/original`,
     contentType: multer_s3_1.default.AUTO_CONTENT_TYPE,
 });
 // 파일 필터링

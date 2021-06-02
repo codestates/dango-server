@@ -14,7 +14,7 @@ const schema = new mongoose_1.Schema({
             _id: { type: mongoose_1.Schema.Types.ObjectId, ref: 'users' },
             reviewId: { type: String, default: () => uuid_1.v4().replace(/\-/g, '') },
             nickname: { type: String, required: true },
-            rating: { type: Number, required: true, default: [0, 0] },
+            rating: { type: Number, required: true },
             review: { type: String, required: true },
             date: { type: String, required: true },
             reply: {
@@ -29,7 +29,7 @@ const schema = new mongoose_1.Schema({
     images: { type: [String], required: false },
     location: { type: [Number], required: true, index: '2dsphere' },
     address: { type: String, required: true },
-    ratings: { type: [Number], required: true },
+    ratings: { type: [Number], required: true, default: [0, 0] },
     price: { type: Number, required: true },
     category: { type: String, required: true },
     title: { type: String, required: true },

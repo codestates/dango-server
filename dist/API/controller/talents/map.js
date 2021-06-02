@@ -43,10 +43,11 @@ exports.default = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             .select('-__v -reviews -images ')
             .sort(`${finalSort}`)
             .lean();
-        previewsArr.map((preview) => {
-            return preview;
+        const changeRatings = previewsArr.map((preview) => {
+            return Object.assign(Object.assign({}, preview), { reatings: [preview.ratings[0] === 0 ? 0 : preview.ratings[0] / preview.ratings[1], preview.ratings[1]] });
         });
-        res.json({ result: previewsArr, message: '주변 데이터 불러오기에 성공했습니다.' });
+        console.log(changeRatings);
+        res.json({ result: changeRatings, message: '주변 데이터 불러오기에 성공했습니다.' });
     }
     catch (err) {
         console.log(err);
