@@ -12,7 +12,7 @@ export default async (req: Request, res: Response) => {
     if (result) {
       delete result.userInfo.socialData.id;
       delete result.userInfo.socialData.social;
-      console.log(result)
+      console.log(result);
       const newReviews = result.reviews.map((el) => {
         const data: UserInfo = el._id;
         const {
@@ -30,7 +30,7 @@ export default async (req: Request, res: Response) => {
       res.json({
         ...result,
         reviews: newReviews,
-        ratings: [result.ratings[0] / result.ratings[1], result.ratings[1]],
+        ratings: [result.ratings[0] === 0 ? 0 : result.ratings[0] / result.ratings[1], result.ratings[1]],
       });
     } else {
       res.status(404).json({ message: '재능 정보를 찾을 수 없습니다.' });
