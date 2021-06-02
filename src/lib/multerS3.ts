@@ -17,7 +17,7 @@ const s3 = new aws.S3({});
 
 const storage = multers3({
   s3,
-  bucket: 'dango/image/original',
+  bucket: `${config.bucketName}/image/original`,
   contentType: multers3.AUTO_CONTENT_TYPE,
 });
 

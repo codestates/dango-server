@@ -32,13 +32,16 @@ export default async (req: Request, res: Response) => {
       .sort(`${finalSort}`)
       .lean();
 
-    previewsArr.map((preview: any) => {
-      return preview;
+    const changeRatings = previewsArr.map((preview: any) => {
+      return {
+        ...preview,
+        reatings: [preview.ratings[0] === 0 ? 0 : preview.ratings[0] / preview.ratings[1], preview.ratings[1]],
+      };
     });
-    res.json({ result: previewsArr, message: '주변 데이터 불러오기에 성공했습니다.' });
+    console.log(changeRatings);
+    res.json({ result: changeRatings, message: '주변 데이터 불러오기에 성공했습니다.' });
   } catch (err) {
     console.log(err);
     res.json({ message: '서버 응답에 실패했습니다.' });
   }
 };
-
