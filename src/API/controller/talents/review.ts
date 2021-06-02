@@ -27,7 +27,7 @@ export default async (req: Request, res: Response) => {
       };
       const updatedResult = await TalentModel.findOneAndUpdate(
         { _id: talentId },
-        { $push: { reviews: newReview }, $inc: { 'rating.0': rating, 'rating.1': 1 } },
+        { $push: { reviews: newReview }, $inc: { 'ratings.0': rating, 'ratings.1': 1 } },
         { new: true },
       )
         .select('reviews')
