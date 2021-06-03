@@ -1,7 +1,7 @@
 import app from '../app';
 import config from '../config/key';
 import { Server } from 'socket.io';
-import WebSockets from '../utils/socket';
+import WebSockets from '../loaders/socket';
 
 const port = config.port || 4000;
 const server = app.listen(port, () => {
