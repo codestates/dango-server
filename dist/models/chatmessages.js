@@ -42,6 +42,9 @@ messageSchema.statics.getMessagesByRoomId = function (roomId, userId, options = 
                 { $sort: { createdAt: -1 } },
                 { $match: { roomId } },
                 {
+                    $set: { userId },
+                },
+                {
                     $lookup: {
                         let: { userObjId: { $toObjectId: '$postedBy' } },
                         from: 'users',
@@ -49,46 +52,49 @@ messageSchema.statics.getMessagesByRoomId = function (roomId, userId, options = 
                         as: 'postedBy',
                     },
                 },
-                // {
-                //   $addFields: {
-                //     postedBy: {
-                //       $function: {
-                //         body: function (postedBy: any) {
-                //           return {
-                //             _id: postedBy[0]._id,
-                //             nickname: postedBy[0].nickname,
-                //             image: postedBy[0].socialData.image,
-                //           };
-                //         },
-                //         args: ['$postedBy'],
-                //         lang: 'js',
-                //       },
-                //     },
-                //     isRead: {
-                //       $function: {
-                //         body: function (readBy: any[], userId: string) {
-                //           if (readBy.find((readByArr: any) => readByArr.readUser === userId)) {
-                //             return true;
-                //           }
-                //           return false;
-                //         },
-                //         args: ['$readBy', '$userId'],
-                //         lang: 'js',
-                //       },
-                //     },
-                //   },
-                // },
-                //
+                {
+                    $lookup: {
+                        from: 'chatrooms',
+                        localField: 'roomId',
+                        foreignField: '_id',
+                        as: 'isRead',
+                    },
+                },
                 {
                     $replaceWith: {
                         _id: '$_id',
                         type: '$type',
                         message: '$message',
                         createdAt: '$createdAt',
+                        readBy: '$readBy',
+                        userId: '$userId',
                         postedBy: {
                             _id: { $arrayElemAt: ['$postedBy._id', 0] },
                             nickname: { $arrayElemAt: ['$postedBy.nickname', 0] },
                             image: { $arrayElemAt: ['$postedBy.socialData.image', 0] },
+                        },
+                        isRead: {
+                            $arrayElemAt: ['$isRead.users', 0],
+                        },
+                    },
+                },
+                {
+                    $addFields: {
+                        isRead: {
+                            $function: {
+                                body: function (readBy, userId, userIds) {
+                                    const otherId = userIds.filter((el) => el !== userId)[0];
+                                    let result = false;
+                                    readBy.forEach((el) => {
+                                        if (el.readUser === otherId) {
+                                            result = true;
+                                        }
+                                    });
+                                    return result;
+                                },
+                                args: ['$readBy', '$userId', '$isRead'],
+                                lang: 'js',
+                            },
                         },
                     },
                 },
@@ -102,7 +108,7 @@ messageSchema.statics.getMessagesByRoomId = function (roomId, userId, options = 
         }
     });
 };
-// Need $push Test 
+// Need $push Test
 messageSchema.statics.updateReadBy = function (roomId, userId) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -123,7 +129,7 @@ messageSchema.statics.createPost = function (roomId, message, postedBy, confirm,
             const createdResult = yield this.create({
                 roomId,
                 message: isStart ? '거래가 시작됐습니다.' : message,
-                type: confirm ? 'confirm' : isStart ? 'start' : 'text',
+                type: confirm ? 'confirm' : isStart ? 'init' : 'text',
                 postedBy,
                 readBy: { readUser: postedBy },
             });

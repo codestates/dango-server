@@ -11,7 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = require("mongoose");
 const schema = new mongoose_1.Schema({
-    nickname: { type: String, required: true, unique: true },
+    nickname: { type: String, required: true },
     socialData: {
         id: { type: mongoose_1.Schema.Types.Mixed, required: false, unique: true },
         social: { type: String, required: true },

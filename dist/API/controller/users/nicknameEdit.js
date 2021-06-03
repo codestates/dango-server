@@ -16,12 +16,18 @@ const user_1 = __importDefault(require("../../../models/user"));
 exports.default = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { userId, nickname } = req.body;
     try {
-        const newUser = yield user_1.default.updateOne({ _id: userId }, { $set: { nickname } });
-        if (newUser.nModified > 0) {
-            res.json({ message: '닉네임 변경에 성공했습니다.', nickname });
+        const isValid = yield user_1.default.findOne({ nickname }).select('nickname').lean();
+        if (!isValid) {
+            const newUser = yield user_1.default.updateOne({ _id: userId }, { $set: { nickname } });
+            if (newUser.nModified > 0) {
+                res.json({ message: '닉네임 변경에 성공했습니다.', nickname });
+            }
+            else {
+                res.status(406).json({ message: '동일한 닉네임입니다.' });
+            }
         }
         else {
-            res.status(406).send({ message: '동일한 닉네임입니다.' });
+            res.status(406).json({ message: '이미 존재하는 닉네임입니다.' });
         }
     }
     catch (err) {
