@@ -49,33 +49,40 @@ class WebSockets {
           // 두 유저의 아이디를 받아와서 메세지를 그 방에 뿌려준다.
           // 누구의 아이디가 앞에있는지 모르므로 두번 체크한다.
 
-          if (isStart) {
-            // 새로운 채팅방 요청 응답
-            const messageForm = await MessageModel.createPost(roomId, message, clientId, undefined, true);
-            const roomname = [clientId, otherId].sort().join('');
-            if (client.rooms.has(roomname)) {
-              io.sockets.in(roomname).emit('messageFromOther', messageForm);
-            } else {
-              client.emit('messageFromOther', messageForm);
-            }
+          // 지속적인 채팅방 요청응답
+          const messageForm = await MessageModel.createPost(roomId, message, clientId);
+          console.log(messageForm);
+          const roomname = [clientId, otherId].sort().join('');
+          if (client.rooms.has(roomname)) {
+            /////////////////////////// 나중에 join(talentId) 추가해야됨.
+            // 다른 사람이 온라인이면 읽음처리를 해줘야됨.
+            io.sockets.in(`${clientId}${otherId}`).emit('messageFromOther', messageForm);
           } else {
-            // 지속적인 채팅방 요청응답
-            const messageForm = await MessageModel.createPost(roomId, message, clientId);
-            console.log(messageForm);
-            if (client.rooms.has(`${clientId}${otherId}`)) { /////////////////////////// 나중에 join(talentId) 추가해야됨.
-              // 다른 사람이 온라인이면 읽음처리를 해줘야됨.
-              io.sockets.in(`${clientId}${otherId}`).emit('messageFromOther', messageForm);
-            } else if (client.rooms.has(`${otherId}${clientId}`)) {
-              io.sockets.in(`${otherId}${clientId}`).emit('messageFromOther', messageForm);
-            } else {
-              // 온라인 상태인 유저로부터 메세지를 받아왔지만 상대는 온라인이 아닌 경우
-              client.emit('messageFromOther', messageForm);
-              // io.sockets.in(`${otherId}${clientId}`).emit('messageFromOther', messageForm);
-            }
+            // 온라인 상태인 유저로부터 메세지를 받아왔지만 상대는 온라인이 아닌 경우
+            client.emit('messageFromOther', messageForm);
+            // io.sockets.in(`${otherId}${clientId}`).emit('messageFromOther', messageForm);
           }
         },
       );
+      client.on('initChat', async (roomId: string, otherId: string) => {
+        const messageForm = await MessageModel.createPost(roomId, '', clientId, undefined, true);
+        if (this.users.has(otherId)) {
+          const otherSocketId = this.users.get(otherId);
+          const otherClient = io.of('/').sockets.get(otherSocketId);
+          const roomname = [clientId, otherId].sort().join('');
 
+          // 실시간 채팅방 형성
+          otherClient?.join(roomname);
+          client.join(roomname);
+          console.log('방 아이디', roomname);
+          // 테스트용
+          io.sockets.in(roomname).emit('hasjoined', otherSocketId);
+          // 생성 메세지 전송
+          io.sockets.in(roomname).emit('messageFromOther', messageForm);
+        } else {
+          client.emit('messageFromOther', messageForm);
+        }
+      });
       client.on('updateReadBy', async (roomId, otherId) => {
         await MessageModel.updateReadBy(roomId, otherId);
       });
@@ -88,16 +95,7 @@ class WebSockets {
       console.log(this.users);
     });
   };
-  generate = (io: Server) => {
-    io.of('/').adapter.on('create-room', (room) => {
-      console.log(`room ${room} was created`);
-    });
-  };
-  join = (io: Server) => {
-    io.of('/joinroom').adapter.on('join-room', (room, id) => {
-      console.log(`socket ${id} has joined room ${room}`);
-    });
-  };
+
 }
 
 export default new WebSockets();
