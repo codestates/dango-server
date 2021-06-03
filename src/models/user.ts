@@ -3,7 +3,7 @@ import { Schema, model, Types } from 'mongoose';
 import { IBuyingArr, IUserDocument, IUserModel } from '../@types/userModel';
 
 const schema: Schema<IUserDocument> = new Schema({
-  nickname: { type: String, required: true, unique: true },
+  nickname: { type: String, required: true },
   socialData: {
     id: { type: Schema.Types.Mixed, required: false, unique: true },
     social: { type: String, required: true },

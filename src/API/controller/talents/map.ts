@@ -43,13 +43,19 @@ export default async (req: Request, res: Response) => {
           : sort === 'review'
             ? previewsArr.sort((a, b) => b.ratings[1] - a.ratings[1])
             : previewsArr;
-    const changeRatings = sortedArr.map((preview: any) => {
-      return {
-        ...preview,
-        ratings: [preview.ratings[0] === 0 ? 0 : preview.ratings[0] / preview.ratings[1], preview.ratings[1]],
-      };
-    });
-    console.log(changeRatings);
+    const changeRatings = sortedArr.reduce((result: any[], preview: any) => {
+      if (preview.userInfo.nickname === '탈퇴한 유저') {
+        return result;
+      }
+      return [
+        ...result,
+        {
+          ...preview,
+          ratings: [preview.ratings[0] === 0 ? 0 : preview.ratings[0] / preview.ratings[1], preview.ratings[1]],
+        },
+      ];
+    }, []);
+
     res.json({ result: changeRatings, message: '주변 데이터 불러오기에 성공했습니다.' });
   } catch (err) {
     console.log(err);
