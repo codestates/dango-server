@@ -38,7 +38,7 @@ const resize = (params) => {
     sizes.forEach((size) => {
       const resized = sharp(params.Body)
         .resize({ width: size, fit: sharp.fit.contain })
-        .toFormat(params.ContentType.replace('image/', ''))
+        .webp({ lossless: true })
         .toBuffer();
       result.push({
         Body: resized,
@@ -76,7 +76,6 @@ exports.handler = (event, context, callback) => {
   const bucket = event.Records[0].s3.bucket.name;
   const key = decodeURIComponent(event.Records[0].s3.object.key.replace(/\+/g, ' '));
   const params = { Bucket: bucket, Key: key };
-
   getObject(params)
     .then(resize)
     .then(putObject)
