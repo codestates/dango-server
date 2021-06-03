@@ -8,7 +8,7 @@ export default async (req: Request, res: Response) => {
   const [lat, lon]: number[] = req.body.location; // 쿼리 보낼땐 반대로
   const categorys: string[] = req.body.category || [''];
   const sort: 'price' | 'ratings' | 'review' | undefined = req.body.sort;
-  const finalSort = sort === 'price' ? 'price' : sort === 'ratings' ? '-ratings.0' : '-ratings.1' || '';
+  const finalSort = sort === 'price' ? 'price' : sort === 'ratings' ? '-ratings.0' : '-ratings.1' || 'location';
   const width = solveMapWidth([S, N]);
   try {
     const previewsArr = await TalentModel.find({
@@ -29,16 +29,33 @@ export default async (req: Request, res: Response) => {
       .populate({ path: 'userInfo', select: 'nickname' })
       // .select('location ratings category title price')
       .select('-__v -reviews -images ')
-      .sort(`${finalSort}`)
+      // .sort(`${finalSort}`)
       .lean();
+    const sortedArr =
+      sort === 'price'
+        ? previewsArr.sort((a, b) => b.price - a.price)
+        : sort === 'ratings'
+          ? previewsArr.sort((a, b) => {
+            const A = a.ratings[0] === 0 ? 0 : a.ratings[0] / a.ratings[1];
+            const B = b.ratings[0] === 0 ? 0 : b.ratings[0] / b.ratings[1];
+            return B - A;
+          })
+          : sort === 'review'
+            ? previewsArr.sort((a, b) => b.ratings[1] - a.ratings[1])
+            : previewsArr;
+    const changeRatings = sortedArr.reduce((result: any[], preview: any) => {
+      if (preview.userInfo.nickname === '탈퇴한 유저') {
+        return result;
+      }
+      return [
+        ...result,
+        {
+          ...preview,
+          ratings: [preview.ratings[0] === 0 ? 0 : preview.ratings[0] / preview.ratings[1], preview.ratings[1]],
+        },
+      ];
+    }, []);
 
-    const changeRatings = previewsArr.map((preview: any) => {
-      return {
-        ...preview,
-        reatings: [preview.ratings[0] === 0 ? 0 : preview.ratings[0] / preview.ratings[1], preview.ratings[1]],
-      };
-    });
-    console.log(changeRatings);
     res.json({ result: changeRatings, message: '주변 데이터 불러오기에 성공했습니다.' });
   } catch (err) {
     console.log(err);

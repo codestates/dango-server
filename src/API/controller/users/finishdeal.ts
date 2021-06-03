@@ -58,7 +58,7 @@ export default async (req: Request, res: Response) => {
         res.json({ message: '거래가 완료됐습니다.', confirmed: true, confirmedChat });
       } else {
         // confirm한 상대의 id를 채팅에 저장
-        const confirmedChat = await MessageModel.createPost(chatroomId, '거래 완료를 눌러주세요', userId, true);
+        const confirmedChat = await MessageModel.createPost(chatroomId, '거래 완료를 눌러주세요.', userId, true);
         res.json({ message: '거래완료 요청에 성공했습니다.', confirmed: false, confirmedChat });
       }
     } else {
