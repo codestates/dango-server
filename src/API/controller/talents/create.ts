@@ -19,10 +19,10 @@ export default async (req: Request, res: Response) => {
     const result = await talentDoc.save();
     if (result) {
       // 저장 된 경우 해당 글을 작성한 유저의 selling배열에 talentId 푸쉬
-      const usersResult = await UserModel.updateOne({ _id: result.userInfo }, { $push: { selling: result._id } });
-      if (usersResult.nModified === 1) {
+      const usersResult = await UserModel.findOneAndUpdate({ _id: result.userInfo }, { $push: { selling: result._id } }).select('_id').lean();
+      if (usersResult) {
         // 성공
-        res.json({ message: '재능 등록에 성공했습니다.' });
+        res.json({ message: '재능 등록에 성공했습니다.', talentId: usersResult._id });
       } else {
         // 푸쉬에 실패한 경우 저장했던 talent document 지운다.
         const deleteResult = await TalentModel.deleteOne({ _id: result._id });

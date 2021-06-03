@@ -13,7 +13,7 @@ export interface IMessageDocument extends Message, Document { }
 // statics
 export interface IMessageModel extends Model<IMessageDocument> {
   getMessagesByRoomId: (chatRoomId: string, userId: string, options?: MessageOptions = {}) => Promise<IMessageDocument>;
-  updateReadBy: (chatroomId: string, userId: string) => void;
+  updateReadBy: (chatroomId: string, userId: string) => any;
   createPost: (
     roomId: string,
     message: string,

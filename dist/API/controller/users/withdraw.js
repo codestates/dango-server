@@ -15,10 +15,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const user_1 = __importDefault(require("../../../models/user"));
 exports.default = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const nickname = req.body.nickname;
-    console.log(nickname);
     try {
-        const data = yield user_1.default.deleteOne({ nickname: nickname });
-        if (data.ok) {
+        const data = yield user_1.default.updateOne({ nickname: nickname }, {
+            $set: {
+                nickname: '탈퇴한 유저',
+                'socialData.id': Date.now(),
+                'socialData.name': '알수 없음',
+                'socialData.email': '',
+                'socialData.image': '',
+            },
+        });
+        if (data.nModified > 0) {
             res.send({ message: '회원 탈퇴에 성공했습니다.' });
         }
         else {
@@ -29,3 +36,4 @@ exports.default = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         res.status(500).send({ message: '서버응답에 실패했습니다.' });
     }
 });
+// 닉네임

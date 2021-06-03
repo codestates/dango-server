@@ -19,7 +19,7 @@ exports.default = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const [lat, lon] = req.body.location; // 쿼리 보낼땐 반대로
     const categorys = req.body.category || [''];
     const sort = req.body.sort;
-    const finalSort = sort === 'price' ? 'price' : sort === 'ratings' ? '-ratings.0' : '-ratings.1' || '';
+    const finalSort = sort === 'price' ? 'price' : sort === 'ratings' ? '-ratings.0' : '-ratings.1' || 'location';
     const width = coordinates_1.default([S, N]);
     try {
         const previewsArr = yield talents_1.default.find({
@@ -41,12 +41,28 @@ exports.default = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             .populate({ path: 'userInfo', select: 'nickname' })
             // .select('location ratings category title price')
             .select('-__v -reviews -images ')
-            .sort(`${finalSort}`)
+            // .sort(`${finalSort}`)
             .lean();
-        const changeRatings = previewsArr.map((preview) => {
-            return Object.assign(Object.assign({}, preview), { reatings: [preview.ratings[0] === 0 ? 0 : preview.ratings[0] / preview.ratings[1], preview.ratings[1]] });
-        });
-        console.log(changeRatings);
+        const sortedArr = sort === 'price'
+            ? previewsArr.sort((a, b) => b.price - a.price)
+            : sort === 'ratings'
+                ? previewsArr.sort((a, b) => {
+                    const A = a.ratings[0] === 0 ? 0 : a.ratings[0] / a.ratings[1];
+                    const B = b.ratings[0] === 0 ? 0 : b.ratings[0] / b.ratings[1];
+                    return B - A;
+                })
+                : sort === 'review'
+                    ? previewsArr.sort((a, b) => b.ratings[1] - a.ratings[1])
+                    : previewsArr;
+        const changeRatings = sortedArr.reduce((result, preview) => {
+            if (preview.userInfo.nickname === '탈퇴한 유저') {
+                return result;
+            }
+            return [
+                ...result,
+                Object.assign(Object.assign({}, preview), { ratings: [preview.ratings[0] === 0 ? 0 : preview.ratings[0] / preview.ratings[1], preview.ratings[1]] }),
+            ];
+        }, []);
         res.json({ result: changeRatings, message: '주변 데이터 불러오기에 성공했습니다.' });
     }
     catch (err) {
