@@ -1,5 +1,6 @@
 import { Socket, Server } from 'socket.io';
 import MessageModel from '../models/chatmessages';
+import confirm from '../utils/finishdeal';
 
 class WebSockets {
   private users = new Map();
@@ -108,6 +109,17 @@ class WebSockets {
         */
         const readResult = await MessageModel.updateReadBy(roomId, otherId);
       });
+
+      client.on('confirm', async (talentId: string, userId: string, chatroomId: string, otherId: string) => {
+        const messageForm = await confirm(talentId, userId, chatroomId);
+        if (!messageForm) return;
+        if (this.users.has(otherId)) { // 로그인 돼있다는건 상대방이나 자신이 이미 createRoom 요청을 수행한 상태
+          const roomname = [userId, otherId].sort().join('');
+          io.sockets.in(roomname).emit('messageFromOther', messageForm);
+        } else {
+          client.emit('messageFromOther', messageForm);
+        }
+      })
       // 내가 채팅방 안에 있을 때 메세지가 오면 읽음 요청을 보내야되요
       // 내가 메세지를 읽으면 상대방입장에선 상대방이 채팅방 안에있을때 1을 없애야되고,.... advanced
       client.on('disconnect', () => {
