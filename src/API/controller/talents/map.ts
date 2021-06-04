@@ -33,7 +33,7 @@ export default async (req: Request, res: Response) => {
       .lean();
     const sortedArr =
       sort === 'price'
-        ? previewsArr.sort((a, b) => b.price - a.price)
+        ? previewsArr.sort((a, b) => a.price - b.price)
         : sort === 'ratings'
           ? previewsArr.sort((a, b) => {
             const A = a.ratings[0] === 0 ? 0 : a.ratings[0] / a.ratings[1];

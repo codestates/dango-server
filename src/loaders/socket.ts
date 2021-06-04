@@ -88,7 +88,7 @@ class WebSockets {
           client.emit('messageFromOther', messageForm);
         }
       });
-      client.on('updateReadBy', async (roomId, otherId) => {
+      client.on('updateReadBy', async (otherId: string, roomId: string) => {
         const readResult = await MessageModel.updateReadBy(roomId, otherId);
       });
       client.on('confirm', async (talentId: string, userId: string, chatroomId: string, otherId: string) => {
@@ -105,14 +105,13 @@ class WebSockets {
       client.on('joinchat', (otherId: string, roomId: string) => {
         // 해당 유저가 해당 방에 있다는 정보를 저장한다
         this.inchat.set(clientId, roomId);
-        const roomname = [otherId, clientId].sort().join('');
-        if (this.users.get(otherId) === roomId) {
+        if (this.inchat.get(otherId) === roomId) {
           // 둘이 같은 채팅방 안에 있다.
           // 둘 모두에게 otherIsJoined === true로 보내줌
           const otherSocketId = this.users.get(otherId);
           const otherClient = io.of('/').sockets.get(otherSocketId);
-          otherClient?.emit('otherIsJoined', clientId, roomId, false);
-          client.emit('otherIsJoined', otherId, roomId, false);
+          otherClient?.emit('otherIsJoined', clientId, roomId, true);
+          client.emit('otherIsJoined', otherId, roomId, true);
         } else {
           // 둘이 다른방에 있다.
           // 다른사람에겐 굳이 보낼 필요가 없다.

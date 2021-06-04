@@ -21,14 +21,15 @@ export default async (req: Request, res: Response) => {
           id,
           kakao_account: { email },
         } = data;
+        console.log(data)
         const userInfo = {
           nickname,
           socialData: {
             id,
             social: 'kakao',
-            name: data.properties && data.properties.nickname,
+            name: data.properties?.nickname,
             email: email,
-            image: config.defaultImage,
+            image: data.kakao_account.profile?.thumbnail_image_url || config.defaultImage,
           },
         };
         const newUser = new UserModel(userInfo);

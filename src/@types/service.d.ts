@@ -16,6 +16,8 @@ export interface KakaoUserInfo {
     profile_needs_agreement: boolean;
     profile?: {
       nickname: string;
+      thumbnail_image_url?: string;
+      profile_image_url?: string;
       is_default_image: boolean;
     };
     has_email: boolean;
