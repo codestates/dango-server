@@ -97,9 +97,9 @@ class WebSockets {
         if (this.users.has(otherId)) {
           // 로그인 돼있다는건 상대방이나 자신이 이미 createRoom 요청을 수행한 상태
           const roomname = [userId, otherId].sort().join('');
-          io.sockets.in(roomname).emit('messageFromOther', messageForm);
+          io.sockets.in(roomname).emit('messageFromOther', messageForm, talentId);
         } else {
-          client.emit('messageFromOther', messageForm);
+          client.emit('messageFromOther', messageForm, talentId);
         }
       });
       client.on('joinchat', (otherId: string, roomId: string) => {
@@ -109,14 +109,17 @@ class WebSockets {
         if (this.users.get(otherId) === roomId) {
           // 둘이 같은 채팅방 안에 있다.
           // 둘 모두에게 otherIsJoined === true로 보내줌
-          io.sockets.in(roomname).emit('otherIsJoined', otherId, roomId, true);
+          const otherSocketId = this.users.get(otherId);
+          const otherClient = io.of('/').sockets.get(otherSocketId);
+          otherClient?.emit('otherIsJoined', clientId, roomId, false);
+          client.emit('otherIsJoined', otherId, roomId, false);
         } else {
           // 둘이 다른방에 있다.
           // 다른사람에겐 굳이 보낼 필요가 없다.
           client.emit('otherIsJoined', otherId, roomId, false);
         }
       });
-      // 
+      //
       client.on('leavechat', (otherId: string, roomId: string) => {
         this.inchat.set(clientId, null);
         if (this.inchat.get(otherId) === roomId) {
