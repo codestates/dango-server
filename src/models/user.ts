@@ -1,6 +1,7 @@
 import { User } from './../@types/index.d';
 import { Schema, model, Types } from 'mongoose';
 import { IBuyingArr, IUserDocument, IUserModel } from '../@types/userModel';
+import logger from '../log/winston';
 
 const schema: Schema<IUserDocument> = new Schema({
   nickname: { type: String, required: true },
@@ -282,7 +283,8 @@ schema.statics.getTalents = async function (userId: string) {
       },
     ]);
   } catch (err) {
-    console.log(err);
+    logger.debug(`${this.name} ${__dirname} ${err.message}`);
+
   }
 };
 

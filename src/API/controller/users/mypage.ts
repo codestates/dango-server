@@ -25,7 +25,7 @@ export default async (req: Request, res: Response) => {
                     reviewIds.splice(idx, 1);
                     return true;
                   }
-                })?.rating
+                })?.rating,
               },
             ],
           };
