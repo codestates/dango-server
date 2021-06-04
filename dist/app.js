@@ -28,7 +28,6 @@ app.use('/talents', index_1.default.talents);
 app.use('/users', index_1.default.users);
 app.use('/images', index_1.default.images);
 app.get('/', (req, res) => {
-    console.log(req);
     res.send({ message: 'hello ngrok!' });
 });
 app.get('/test', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -50,7 +49,6 @@ app.get('/test', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 // ---------------------------------TEST ENDPOINT---------------------------------- //
 // 404
 app.use('*', (req, res) => {
-    console.log(req);
     return res.status(404).json({
         success: false,
         message: 'API endpoint doesnt exist',
