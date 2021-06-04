@@ -12,7 +12,6 @@ export default async (req: Request, res: Response) => {
     if (result) {
       delete result.userInfo.socialData.id;
       delete result.userInfo.socialData.social;
-      console.log(result);
       const newReviews = result.reviews.map((el) => {
         const data: UserInfo = el._id;
         const {

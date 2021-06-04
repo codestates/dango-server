@@ -12,21 +12,25 @@ const schema: Schema<IUserDocument> = new Schema({
     image: { type: String, required: false },
   },
   selling: { type: [String], default: [] },
-  buying: [
-    {
-      _id: String,
-      confirmed: [String],
-      default: [],
-    },
-  ],
+  buying: {
+    type: [
+      {
+        _id: String,
+        confirmed: [String],
+      },
+    ],
+    default: [],
+  },
   unreviewed: { type: [String], default: [] },
-  reviewed: [
-    {
-      _id: String,
-      reviewId: String,
-      default: [],
-    },
-  ],
+  reviewed: {
+    type: [
+      {
+        _id: String,
+        reviewId: String,
+      },
+    ],
+    default: [],
+  },
   talks: { type: [String], default: [] },
 });
 
@@ -117,12 +121,12 @@ schema.statics.getchatRoomsByUserId = async function (userId: string) {
                 const confirmedArr = buyingArr.find((el) => el._id === talentId)?.confirmed;
                 if (confirmedArr) {
                   return confirmedArr.length >= 2
-                    ? [true, true]
+                    ? [true, true] // 둘다 누름
                     : confirmedArr.length === 0
-                      ? [false, false]
+                      ? [false, false] // 둘다 안눌름
                       : confirmedArr.indexOf(userId) !== -1
-                        ? [true, false]
-                        : [false, false];
+                        ? [true, false] // 내가 누름
+                        : [false, true]; // 상대가 누름
                 } else {
                   return [true, true];
                 }

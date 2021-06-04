@@ -21,7 +21,6 @@ export default async (req: Request, res: Response) => {
           id,
           kakao_account: { email },
         } = data;
-        console.log(data)
         const userInfo = {
           nickname,
           socialData: {
