@@ -71,7 +71,7 @@ class WebSockets {
       );
       client.on('initChat', async (otherId: string, roomId: string) => {
         const messageForm = await MessageModel.createPost(roomId, '', clientId, undefined, true);
-        if (this.users.has(otherId)) {
+        if (this.inchat.has(otherId)) {
           const otherSocketId = this.users.get(otherId);
           const otherClient = io.of('/').sockets.get(otherSocketId);
           const roomname = [clientId, otherId].sort().join('');
@@ -116,6 +116,7 @@ class WebSockets {
           client.emit('otherIsJoined', otherId, roomId, false);
         }
       });
+      // 
       client.on('leavechat', (otherId: string, roomId: string) => {
         this.inchat.set(clientId, null);
         if (this.inchat.get(otherId) === roomId) {
@@ -135,7 +136,7 @@ class WebSockets {
         this.inchat.delete(clientId);
         client.rooms.clear();
       });
-      console.log(this.inchat);
+      console.log(this.users);
     });
   };
 }

@@ -16,6 +16,7 @@ const schema: Schema<IUserDocument> = new Schema({
     {
       _id: String,
       confirmed: [String],
+      default: [],
     },
   ],
   unreviewed: { type: [String], default: [] },
@@ -23,6 +24,7 @@ const schema: Schema<IUserDocument> = new Schema({
     {
       _id: String,
       reviewId: String,
+      default: [],
     },
   ],
   talks: { type: [String], default: [] },
@@ -218,7 +220,7 @@ schema.statics.getTalents = async function (userId: string) {
           unreviewed: 1,
           selling: 1,
           reviewed: '$reviewed._id',
-          myReviews: "$reviewed.reviewId"
+          myReviews: '$reviewed.reviewId',
         },
       },
       {
