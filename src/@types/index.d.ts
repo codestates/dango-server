@@ -49,6 +49,7 @@ export interface PopulatedTalent {
       image: string;
     };
   };
+  images: string[];
   ratings: number[];
   address: string;
   category: string;
