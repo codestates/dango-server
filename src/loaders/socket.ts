@@ -60,7 +60,7 @@ class WebSockets {
           if (client.rooms.has(roomname)) {
             /////////////////////////// 나중에 join(talentId) 추가해야됨.
             // 다른 사람이 온라인이면 읽음처리를 해줘야됨.
-            io.sockets.in(`${clientId}${otherId}`).emit('messageFromOther', messageForm);
+            io.sockets.in(roomname).emit('messageFromOther', messageForm);
           } else {
             // 온라인 상태인 유저로부터 메세지를 받아왔지만 상대는 온라인이 아닌 경우
             client.emit('messageFromOther', messageForm);
@@ -69,7 +69,6 @@ class WebSockets {
         },
       );
       client.on('initChat', async (otherId: string, roomId: string,) => {
-        console.log(1123178236912391719371296);
         const messageForm = await MessageModel.createPost(roomId, '', clientId, undefined, true);
         if (this.users.has(otherId)) {
           const otherSocketId = this.users.get(otherId);
@@ -138,3 +137,4 @@ export default new WebSockets();
  * 클라는 메세지를 받으면 읽었는지 안읽었는지 구분이 필요함......메세지를 받을 때마다 읽음 요청을 보내고 ...
  *
  */
+

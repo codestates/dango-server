@@ -20,7 +20,6 @@ app.use('/users', route.users);
 app.use('/images', route.images);
 
 app.get('/', (req: Request, res: Response) => {
-  console.log(req);
   res.send({ message: 'hello ngrok!' });
 });
 
@@ -53,7 +52,6 @@ app.get('/test', async (req: Request, res: Response) => {
 
 // 404
 app.use('*', (req, res) => {
-  console.log(req);
   return res.status(404).json({
     success: false,
     message: 'API endpoint doesnt exist',
