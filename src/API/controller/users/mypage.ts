@@ -1,6 +1,7 @@
 import { Schema } from 'mongoose';
 import { Request, Response } from 'express';
 import UserModel from '../../../models/user';
+import logger from '../../../log/winston';
 
 export default async (req: Request, res: Response) => {
   const userId = req.params.userid;
@@ -25,7 +26,7 @@ export default async (req: Request, res: Response) => {
                     reviewIds.splice(idx, 1);
                     return true;
                   }
-                })?.rating
+                })?.rating,
               },
             ],
           };
@@ -37,6 +38,8 @@ export default async (req: Request, res: Response) => {
       res.json({ m: '' });
     }
   } catch (err) {
+    logger.debug(`${__dirname} users/mypage err message :: ${err.message}`);
+
     res.status(500).json({ message: '서버 응답에 실패했습니다.' });
   }
 };

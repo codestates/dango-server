@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import logger from '../../../log/winston';
 import ChatRoomModel from '../../../models/chatrooms';
 import UserModel from '../../../models/user';
 
@@ -18,6 +19,7 @@ export default async (req: Request, res: Response) => {
       res.json({ message: '방 생성에 성공했습니다.', roomId });
     }
   } catch (err) {
+    logger.debug(`${__dirname} chat/createRoom err message :: ${err.message}`);
     res.status(500).json({ message: '서버 응답에 실패했습니다.' });
   }
 };

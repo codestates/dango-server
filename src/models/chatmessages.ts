@@ -2,6 +2,7 @@ import { IMessageModel, IMessageDocument, MessageOptions } from '../@types/messa
 import { Schema, model, Types } from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
 import { ReadBy } from './../@types/index.d';
+import logger from '../log/winston';
 
 const readbySchema = new Schema<ReadBy>(
   {
@@ -70,6 +71,7 @@ messageSchema.statics.getMessagesByRoomId = async function (
           message: '$message',
           createdAt: '$createdAt',
           readBy: '$readBy',
+          roomId: '$roomId',
           userId: '$userId',
           postedBy: {
             _id: { $arrayElemAt: ['$postedBy._id', 0] },
@@ -82,7 +84,7 @@ messageSchema.statics.getMessagesByRoomId = async function (
         },
       },
       {
-        $addFields: {
+        $project: {
           isRead: {
             $function: {
               body: function (readBy: any[], userId: string, userIds: string[]) {
@@ -93,12 +95,18 @@ messageSchema.statics.getMessagesByRoomId = async function (
                     result = true;
                   }
                 });
-                return result
+                return result;
               },
               args: ['$readBy', '$userId', '$isRead'],
               lang: 'js',
             },
           },
+          _id: 1,
+          type: 1,
+          message: 1,
+          roomId: 1,
+          createdAt: 1,
+          postedBy: 1,
         },
       },
       { $skip: options.page * options.limit + options.skip },
@@ -106,7 +114,7 @@ messageSchema.statics.getMessagesByRoomId = async function (
       { $sort: { createdAt: 1 } },
     ]);
   } catch (err) {
-    console.log(err);
+    logger.debug(`${__dirname} getMessages err message :: ${err.message}`);
   }
 };
 // Need $push Test
@@ -159,19 +167,22 @@ messageSchema.statics.createPost = async function (
             _id: '$_id',
             type: '$type',
             message: '$message',
+            roomId: '$roomId',
             createdAt: '$createdAt',
             postedBy: {
               _id: { $arrayElemAt: ['$postedBy._id', 0] },
               nickname: { $arrayElemAt: ['$postedBy.nickname', 0] },
               image: { $arrayElemAt: ['$postedBy.socialData.image', 0] },
             },
+            isRead: true,
           },
         },
       ]);
+      console.log(findWithPostedBy[0]);
       return findWithPostedBy[0];
     }
   } catch (err) {
-    console.log(err);
+    logger.debug(`${__dirname} createPost err message :: ${err.message}`);
   }
 };
 /*

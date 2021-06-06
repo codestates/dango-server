@@ -4,8 +4,8 @@ import confirm from '../utils/finishdeal';
 
 class WebSockets {
   private users = new Map();
+  private inchat = new Map();
 
-  private online: number = 0;
   connect = (io: Server) => {
     io.on('connection', (client: Socket) => {
       // 클라이언트 objectId : ( _id )
@@ -17,6 +17,8 @@ class WebSockets {
         : client.handshake.query.clientId;
       // 쿼리로 담겨온 클라이언트 아이디를 소켓아이디와 함께 users에 저장
       this.users.set(clientId, client.id);
+      this.inchat.set(clientId, null);
+
       const createRoom = (userId: string, otherId: string) => {
         // 저장돼있다면 둘다 로그인 상태이므로 방을 만들어준다.
 
@@ -45,7 +47,6 @@ class WebSockets {
           }
         });
       });
-
       // 상대방에게 메세지 보내기
       client.on(
         'messageToOther',
@@ -68,9 +69,9 @@ class WebSockets {
           }
         },
       );
-      client.on('initChat', async (otherId: string, roomId: string,) => {
+      client.on('initChat', async (otherId: string, roomId: string) => {
         const messageForm = await MessageModel.createPost(roomId, '', clientId, undefined, true);
-        if (this.users.has(otherId)) {
+        if (this.inchat.has(otherId)) {
           const otherSocketId = this.users.get(otherId);
           const otherClient = io.of('/').sockets.get(otherSocketId);
           const roomname = [clientId, otherId].sort().join('');
@@ -87,42 +88,54 @@ class WebSockets {
           client.emit('messageFromOther', messageForm);
         }
       });
-      client.on('updateReadBy', async (roomId, otherId) => {
-        /* 클라이언트가 readBy요청을 보내면 readBy 업데이트해주고 readBy 업데이트 됐다고 알려줘야됨
-         *클라이언트는 상대방의 readBy응답을 받으면 읽음으로 렌더링 처리 해줘야 됨
-         * 
-         * ex) 방법 1
-         * 유저1이 채팅창으로 들어오면 updateReadBy 실행
-         * 유저1, 유저2가 채팅방 안에 있는경우
-         *   : updateReadBy 로 유저1, 유저2에게 읽음처리
-         * 유저1, 유저2가 채팅방 안에 있는데 한명이 메세지를 보내는 경우
-         *   : 유저1, 유저2 에게 모두 읽음 처리
-         * 유저1이 들어와 있는데 유저2는 나가있는 경우 
-         *   : 읽음처리 되면 안됨
-         * 즉 클라이언트는 채팅창에 들어오면 socket.on('updateReadBy', ... ) 를 실행해야 되지만, 
-         * 채팅창에서 나가면 socket.on('updateReadBy', ... )를 꺼야됨 ==> useEffect사용
-         * 
-         * 
-         * ex) 방법2
-         * 
-        */
+      client.on('updateReadBy', async (otherId: string, roomId: string) => {
         const readResult = await MessageModel.updateReadBy(roomId, otherId);
       });
-
       client.on('confirm', async (talentId: string, userId: string, chatroomId: string, otherId: string) => {
         const messageForm = await confirm(talentId, userId, chatroomId);
         if (!messageForm) return;
-        if (this.users.has(otherId)) { // 로그인 돼있다는건 상대방이나 자신이 이미 createRoom 요청을 수행한 상태
+        if (this.users.has(otherId)) {
+          // 로그인 돼있다는건 상대방이나 자신이 이미 createRoom 요청을 수행한 상태
           const roomname = [userId, otherId].sort().join('');
-          io.sockets.in(roomname).emit('messageFromOther', messageForm);
+          io.sockets.in(roomname).emit('messageFromOther', messageForm, talentId);
         } else {
-          client.emit('messageFromOther', messageForm);
+          client.emit('messageFromOther', messageForm, talentId);
         }
-      })
-      // 내가 채팅방 안에 있을 때 메세지가 오면 읽음 요청을 보내야되요
-      // 내가 메세지를 읽으면 상대방입장에선 상대방이 채팅방 안에있을때 1을 없애야되고,.... advanced
+      });
+      client.on('joinchat', (otherId: string, roomId: string) => {
+        // 해당 유저가 해당 방에 있다는 정보를 저장한다
+        this.inchat.set(clientId, roomId);
+        if (this.inchat.get(otherId) === roomId) {
+          // 둘이 같은 채팅방 안에 있다.
+          // 둘 모두에게 otherIsJoined === true로 보내줌
+          const otherSocketId = this.users.get(otherId);
+          const otherClient = io.of('/').sockets.get(otherSocketId);
+          otherClient?.emit('otherIsJoined', clientId, roomId, true);
+          client.emit('otherIsJoined', otherId, roomId, true);
+        } else {
+          // 둘이 다른방에 있다.
+          // 다른사람에겐 굳이 보낼 필요가 없다.
+          client.emit('otherIsJoined', otherId, roomId, false);
+        }
+      });
+      //
+      client.on('leavechat', (otherId: string, roomId: string) => {
+        this.inchat.set(clientId, null);
+        if (this.inchat.get(otherId) === roomId) {
+          // 해당방에 상대방이 있는 경우이므로 상대방 유저에게 상대가 나갔음을 보내줘야됨
+          const otherSocketId = this.users.get(otherId);
+          const otherClient = io.of('/').sockets.get(otherSocketId);
+          otherClient?.emit('otherIsJoined', otherId, roomId, false);
+        } // 아닌 경우 보내줄 필요 없고 joinchat할때 확인하면됨
+      });
+      // Joinchat => 상대방에게 내가 들어갔는지 보내줌 => otherIsJoined로 true 보내줌
+      // 내가 들어간 방의 상대방에게 이벤트 보내야됨
+      // joinchat 내가 나간상태인데 상대방이 joinchat 실행할 경우
+      // 상대방 아이디 필요하고
+      // Leavechat => 상대방에게 내가 나갔는지 알려줌=> otherIsJoined로 false 보내줌
       client.on('disconnect', () => {
         this.users.delete(clientId);
+        this.inchat.delete(clientId);
         client.rooms.clear();
       });
       console.log(this.users);
@@ -137,4 +150,3 @@ export default new WebSockets();
  * 클라는 메세지를 받으면 읽었는지 안읽었는지 구분이 필요함......메세지를 받을 때마다 읽음 요청을 보내고 ...
  *
  */
-

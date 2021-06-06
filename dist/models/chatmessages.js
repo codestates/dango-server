@@ -8,9 +8,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = require("mongoose");
 const uuid_1 = require("uuid");
+const winston_1 = __importDefault(require("../log/winston"));
 const readbySchema = new mongoose_1.Schema({
     _id: false,
     readUser: { type: String, required: false },
@@ -67,6 +71,7 @@ messageSchema.statics.getMessagesByRoomId = function (roomId, userId, options = 
                         message: '$message',
                         createdAt: '$createdAt',
                         readBy: '$readBy',
+                        roomId: '$roomId',
                         userId: '$userId',
                         postedBy: {
                             _id: { $arrayElemAt: ['$postedBy._id', 0] },
@@ -79,7 +84,7 @@ messageSchema.statics.getMessagesByRoomId = function (roomId, userId, options = 
                     },
                 },
                 {
-                    $addFields: {
+                    $project: {
                         isRead: {
                             $function: {
                                 body: function (readBy, userId, userIds) {
@@ -96,6 +101,12 @@ messageSchema.statics.getMessagesByRoomId = function (roomId, userId, options = 
                                 lang: 'js',
                             },
                         },
+                        _id: 1,
+                        type: 1,
+                        message: 1,
+                        roomId: 1,
+                        createdAt: 1,
+                        postedBy: 1,
                     },
                 },
                 { $skip: options.page * options.limit + options.skip },
@@ -104,7 +115,7 @@ messageSchema.statics.getMessagesByRoomId = function (roomId, userId, options = 
             ]);
         }
         catch (err) {
-            console.log(err);
+            winston_1.default.debug(`${__dirname} getMessages err message :: ${err.message}`);
         }
     });
 };
@@ -151,20 +162,23 @@ messageSchema.statics.createPost = function (roomId, message, postedBy, confirm,
                             _id: '$_id',
                             type: '$type',
                             message: '$message',
+                            roomId: '$roomId',
                             createdAt: '$createdAt',
                             postedBy: {
                                 _id: { $arrayElemAt: ['$postedBy._id', 0] },
                                 nickname: { $arrayElemAt: ['$postedBy.nickname', 0] },
                                 image: { $arrayElemAt: ['$postedBy.socialData.image', 0] },
                             },
+                            isRead: true,
                         },
                     },
                 ]);
+                console.log(findWithPostedBy[0]);
                 return findWithPostedBy[0];
             }
         }
         catch (err) {
-            console.log(err);
+            winston_1.default.debug(`${__dirname} createPost err message :: ${err.message}`);
         }
     });
 };

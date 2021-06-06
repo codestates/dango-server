@@ -4,10 +4,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const multerS3_1 = __importDefault(require("../../lib/multerS3"));
+const winston_1 = __importDefault(require("../../log/winston"));
 exports.default = (req, res, next) => {
     try {
         multerS3_1.default(req, res, (err) => {
             if (err) {
+                winston_1.default.debug(`${__dirname} multerMiddleware err message :: ${err.message}`);
                 if (err.code === 'LIMIT_UNEXPECTED_FILE') {
                     res.status(400).json({ message: '사진 갯수가 초과됩니다' });
                 }

@@ -2,6 +2,7 @@ import { CreateTalent } from './../../../@types/request.d';
 import { Request, Response } from 'express';
 import TalentModel from '../../../models/talents';
 import UserModel from '../../../models/user';
+import logger from '../../../log/winston';
 
 export default async (req: Request, res: Response) => {
   const reqData: CreateTalent = req.body;
@@ -32,6 +33,7 @@ export default async (req: Request, res: Response) => {
       res.status(500).json({ message: '데이터 저장에 실패했습니다.' });
     }
   } catch (err) {
+    logger.debug(`${__dirname} talents/create err message :: ${err.message}`);
     res.status(500).json({ message: '서버 응답에 실패했습니다.' });
   }
 };

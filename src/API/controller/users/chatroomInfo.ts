@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import logger from '../../../log/winston';
 import UserModel from '../../../models/user';
 
 export default async (req: Request, res: Response) => {
@@ -11,6 +12,8 @@ export default async (req: Request, res: Response) => {
       res.status(404).json({ message: '불러올 채팅목록이 없습니다.' });
     }
   } catch (err) {
+    logger.debug(`${__dirname} users/chatRoomInfo err message :: ${err.message}`);
+
     res.status(500).send({ message: '서버응답에 실패했습니다.' });
   }
 };

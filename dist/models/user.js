@@ -8,8 +8,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = require("mongoose");
+const winston_1 = __importDefault(require("../log/winston"));
 const schema = new mongoose_1.Schema({
     nickname: { type: String, required: true },
     socialData: {
@@ -20,19 +24,25 @@ const schema = new mongoose_1.Schema({
         image: { type: String, required: false },
     },
     selling: { type: [String], default: [] },
-    buying: [
-        {
-            _id: String,
-            confirmed: [String],
-        },
-    ],
+    buying: {
+        type: [
+            {
+                _id: String,
+                confirmed: [String],
+            },
+        ],
+        default: [],
+    },
     unreviewed: { type: [String], default: [] },
-    reviewed: [
-        {
-            _id: String,
-            reviewId: String,
-        },
-    ],
+    reviewed: {
+        type: [
+            {
+                _id: String,
+                reviewId: String,
+            },
+        ],
+        default: [],
+    },
     talks: { type: [String], default: [] },
 });
 schema.statics.getchatRoomsByUserId = function (userId) {
@@ -123,12 +133,12 @@ schema.statics.getchatRoomsByUserId = function (userId) {
                                     const confirmedArr = (_a = buyingArr.find((el) => el._id === talentId)) === null || _a === void 0 ? void 0 : _a.confirmed;
                                     if (confirmedArr) {
                                         return confirmedArr.length >= 2
-                                            ? [true, true]
+                                            ? [true, true] // 둘다 누름
                                             : confirmedArr.length === 0
-                                                ? [false, false]
+                                                ? [false, false] // 둘다 안눌름
                                                 : confirmedArr.indexOf(userId) !== -1
-                                                    ? [true, false]
-                                                    : [false, false];
+                                                    ? [true, false] // 내가 누름
+                                                    : [false, true]; // 상대가 누름
                                     }
                                     else {
                                         return [true, true];
@@ -216,7 +226,7 @@ schema.statics.getchatRoomsByUserId = function (userId) {
             return result;
         }
         catch (err) {
-            console.log(err);
+            winston_1.default.debug(`${__dirname} getchatRooms err message :: ${err.message}`);
         }
     });
 };
@@ -232,7 +242,7 @@ schema.statics.getTalents = function (userId) {
                         unreviewed: 1,
                         selling: 1,
                         reviewed: '$reviewed._id',
-                        myReviews: "$reviewed.reviewId"
+                        myReviews: '$reviewed.reviewId',
                     },
                 },
                 {
@@ -291,7 +301,7 @@ schema.statics.getTalents = function (userId) {
             ]);
         }
         catch (err) {
-            console.log(err);
+            winston_1.default.debug(`${__dirname} getTalent err message :: ${err.message}`);
         }
     });
 };

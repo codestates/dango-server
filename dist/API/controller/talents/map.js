@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const talents_1 = __importDefault(require("../../../models/talents"));
 const coordinates_1 = __importDefault(require("../../../utils/coordinates"));
+const winston_1 = __importDefault(require("../../../log/winston"));
 exports.default = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const [S, N] = req.body.width;
     const [lat, lon] = req.body.location; // 쿼리 보낼땐 반대로
@@ -44,7 +45,7 @@ exports.default = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             // .sort(`${finalSort}`)
             .lean();
         const sortedArr = sort === 'price'
-            ? previewsArr.sort((a, b) => b.price - a.price)
+            ? previewsArr.sort((a, b) => a.price - b.price)
             : sort === 'ratings'
                 ? previewsArr.sort((a, b) => {
                     const A = a.ratings[0] === 0 ? 0 : a.ratings[0] / a.ratings[1];
@@ -67,6 +68,7 @@ exports.default = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
     catch (err) {
         console.log(err);
+        winston_1.default.debug(`${__dirname} talents/map err message :: ${err.message}`);
         res.json({ message: '서버 응답에 실패했습니다.' });
     }
 });

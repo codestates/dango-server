@@ -1,5 +1,6 @@
 import { S3Payload } from './../../../@types/service.d';
 import { Request, Response } from 'express';
+import logger from '../../../log/winston';
 
 export default async (req: Request, res: Response) => {
   const imgUrlArr: string[] = [];
@@ -13,7 +14,7 @@ export default async (req: Request, res: Response) => {
       res.status(404).json({ message: '이미지 등록에 실패했습니다.' });
     }
   } catch (err) {
-    console.log(err);
+    logger.debug(`${__dirname} images/upload err message :: ${err.message}`);
     res.status(500).json({ message: '서버 응답에 실패했습니다.' });
   }
 };

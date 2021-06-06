@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import logger from '../../../log/winston';
 import TalentModel from '../../../models/talents';
 import UserModel from '../../../models/user';
 
@@ -23,7 +24,7 @@ export default async (req: Request, res: Response) => {
       res.status(401).json({ message: '유효하지 않은 유저입니다.' });
     }
   } catch (err) {
-    console.log(err);
+    logger.debug(`${__dirname} talents/edit err message :: ${err.message}`);
     res.status(500).json({ message: '서버 응답에 실패했습니다.' });
   }
 };

@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const axios_1 = __importDefault(require("axios"));
 const key_1 = __importDefault(require("../config/key"));
+const winston_1 = __importDefault(require("../log/winston"));
 class KakaoAuth {
     static getTokenWithCode(code) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -34,7 +35,9 @@ class KakaoAuth {
                 return yield axios_1.default
                     .post('https://kauth.kakao.com/oauth/token', queryString, { headers: kakaoHeader })
                     .then((res) => res.data)
-                    .catch((e) => e);
+                    .catch((err) => {
+                    winston_1.default.debug(`${__dirname} kakaoAuth/getToken err message :: ${err.message}`);
+                });
             });
         });
     }
@@ -47,7 +50,9 @@ class KakaoAuth {
                 },
             })
                 .then((res) => res.data)
-                .catch((e) => e);
+                .catch((err) => {
+                winston_1.default.debug(`${__dirname} kakaoAuth/getUserInfo err message :: ${err.message}`);
+            });
         });
     }
     static signOut(token) {
@@ -59,7 +64,9 @@ class KakaoAuth {
                 },
             })
                 .then((res) => res.data)
-                .catch((e) => e);
+                .catch((err) => {
+                winston_1.default.debug(`${__dirname} kakaoAuth/signout err message :: ${err.message}`);
+            });
         });
     }
     static withdraw(token) {
@@ -73,7 +80,9 @@ class KakaoAuth {
                 .then((res) => {
                 return res.data;
             })
-                .catch((e) => e);
+                .catch((err) => {
+                winston_1.default.debug(`${__dirname} kakaoAuth/withdraw err message :: ${err.message}`);
+            });
         });
     }
     static validate(token) {
@@ -87,7 +96,9 @@ class KakaoAuth {
                 .then((res) => {
                 return res.data;
             })
-                .catch((e) => e);
+                .catch((err) => {
+                winston_1.default.debug(`${__dirname} kakaoAuth/validate err message :: ${err.message}`);
+            });
         });
     }
 }

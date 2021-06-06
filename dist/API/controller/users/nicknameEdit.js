@@ -12,6 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const winston_1 = __importDefault(require("../../../log/winston"));
 const user_1 = __importDefault(require("../../../models/user"));
 exports.default = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { userId, nickname } = req.body;
@@ -31,6 +32,7 @@ exports.default = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         }
     }
     catch (err) {
+        winston_1.default.debug(`${__dirname} users/nicknameEdit err message :: ${err.message}`);
         if (err.code === 11000) {
             res.status(406).json({ message: '이미 존재하는 닉네임입니다.' });
         }

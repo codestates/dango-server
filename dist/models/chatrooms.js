@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = require("mongoose");
 const uuid_1 = require("uuid");
+const winston_1 = __importDefault(require("../log/winston"));
 const user_1 = __importDefault(require("./user"));
 const schema = new mongoose_1.Schema({
     _id: { type: String, default: () => uuid_1.v4().replace(/\-/g, '') },
@@ -40,7 +41,7 @@ schema.statics.generateChatRooms = function (userId, otherId, talentId) {
             return newRoom._id;
         }
         catch (err) {
-            console.log(err);
+            winston_1.default.debug(`${__dirname} generateChatRooms err message :: ${err.message}`);
         }
     });
 };

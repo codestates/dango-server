@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import logger from '../../../log/winston';
 import TalentModel from '../../../models/talents';
 
 export default async (req: Request, res: Response) => {
@@ -11,6 +12,7 @@ export default async (req: Request, res: Response) => {
       res.status(404).json({ message: '재능 정보를 찾을 수 없습니다.' });
     }
   } catch (err) {
+    logger.debug(`${__dirname} talents/preview err message :: ${err.message}`);
     if (err.name === 'CastError') {
       res.status(404).json({ message: '유효하지 않은 id 입니다' });
     } else {

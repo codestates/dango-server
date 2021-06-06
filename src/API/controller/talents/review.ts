@@ -2,6 +2,7 @@ import { CreateTalent, Review } from './../../../@types/request.d';
 import { Request, Response } from 'express';
 import TalentModel from '../../../models/talents';
 import UserModel from '../../../models/user';
+import logger from '../../../log/winston';
 
 export default async (req: Request, res: Response) => {
   const data: Review = req.body;
@@ -66,8 +67,8 @@ export default async (req: Request, res: Response) => {
       res.status(404).json({ message: '유효하지 않은 유저입니다.' });
     }
   } catch (err) {
+    logger.debug(`${__dirname} talents/review err message :: ${err.message}`);
     res.status(500).json({ message: '서버 응답에 실패했습니다.' });
-    console.log(err);
   }
 };
 

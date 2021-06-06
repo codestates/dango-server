@@ -42,7 +42,7 @@ function fileFilter(req, file, callback) {
 }
 function mimeTypeValidator(type) {
     const typeRegEx = new RegExp(type.split('/')[1], 'g');
-    const acceptableExtension = 'jpg,png,gif,bmp,jpeg';
+    const acceptableExtension = 'jpg,png,gif,bmp,jpeg,heic';
     const matchValue = acceptableExtension.match(typeRegEx);
     if (matchValue) {
         return true;

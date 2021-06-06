@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const user_1 = __importDefault(require("../../../models/user"));
 const chatrooms_1 = __importDefault(require("../../../models/chatrooms"));
 const chatmessages_1 = __importDefault(require("../../../models/chatmessages"));
+const winston_1 = __importDefault(require("../../../log/winston"));
 exports.default = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     const { talentId, userId, chatroomId } = req.body;
@@ -71,7 +72,7 @@ exports.default = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         }
     }
     catch (err) {
-        console.log(err);
+        winston_1.default.debug(`${__dirname} users/finishdeal err message :: ${err.message}`);
         res.status(500).json({ message: '서버 응답에 실패했습니다.' });
     }
 });

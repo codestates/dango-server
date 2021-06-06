@@ -1,6 +1,7 @@
 import { User } from './../@types/index.d';
 import { Schema, model, Types } from 'mongoose';
 import { IBuyingArr, IUserDocument, IUserModel } from '../@types/userModel';
+import logger from '../log/winston';
 
 const schema: Schema<IUserDocument> = new Schema({
   nickname: { type: String, required: true },
@@ -12,19 +13,25 @@ const schema: Schema<IUserDocument> = new Schema({
     image: { type: String, required: false },
   },
   selling: { type: [String], default: [] },
-  buying: [
-    {
-      _id: String,
-      confirmed: [String],
-    },
-  ],
+  buying: {
+    type: [
+      {
+        _id: String,
+        confirmed: [String],
+      },
+    ],
+    default: [],
+  },
   unreviewed: { type: [String], default: [] },
-  reviewed: [
-    {
-      _id: String,
-      reviewId: String,
-    },
-  ],
+  reviewed: {
+    type: [
+      {
+        _id: String,
+        reviewId: String,
+      },
+    ],
+    default: [],
+  },
   talks: { type: [String], default: [] },
 });
 
@@ -115,12 +122,12 @@ schema.statics.getchatRoomsByUserId = async function (userId: string) {
                 const confirmedArr = buyingArr.find((el) => el._id === talentId)?.confirmed;
                 if (confirmedArr) {
                   return confirmedArr.length >= 2
-                    ? [true, true]
+                    ? [true, true] // 둘다 누름
                     : confirmedArr.length === 0
-                      ? [false, false]
+                      ? [false, false] // 둘다 안눌름
                       : confirmedArr.indexOf(userId) !== -1
-                        ? [true, false]
-                        : [false, false];
+                        ? [true, false] // 내가 누름
+                        : [false, true]; // 상대가 누름
                 } else {
                   return [true, true];
                 }
@@ -203,7 +210,7 @@ schema.statics.getchatRoomsByUserId = async function (userId: string) {
     ]);
     return result;
   } catch (err) {
-    console.log(err);
+    logger.debug(`${__dirname} getchatRooms err message :: ${err.message}`);
   }
 };
 
@@ -218,7 +225,7 @@ schema.statics.getTalents = async function (userId: string) {
           unreviewed: 1,
           selling: 1,
           reviewed: '$reviewed._id',
-          myReviews: "$reviewed.reviewId"
+          myReviews: '$reviewed.reviewId',
         },
       },
       {
@@ -276,7 +283,7 @@ schema.statics.getTalents = async function (userId: string) {
       },
     ]);
   } catch (err) {
-    console.log(err);
+    logger.debug(`${__dirname} getTalent err message :: ${err.message}`);
   }
 };
 
