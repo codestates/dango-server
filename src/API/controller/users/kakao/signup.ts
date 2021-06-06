@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 import UserModel from '../../../../models/user';
 import KakaoAuth from '../../../../service/kakao';
 import config from '../../../../config/key';
+import logger from '../../../../log/winston';
 
 export default async (req: Request, res: Response) => {
   const accessToken: string = req.headers.authorization?.split(' ')[1]!;
@@ -34,7 +35,8 @@ export default async (req: Request, res: Response) => {
         const newUser = new UserModel(userInfo);
         newUser.save(async (err, user) => {
           if (err) {
-            return res.status(404).json({ message: "유저정보 저장에 실패했습니다." })
+            logger.debug(`${__dirname} kakao/signup err message :: ${err.message}`);
+            return res.status(404).json({ message: '유저정보 저장에 실패했습니다.' });
           }
           const chatRooms = (await UserModel.getchatRoomsByUserId(user._id)) || null;
           res.send({
@@ -51,7 +53,7 @@ export default async (req: Request, res: Response) => {
             selling: user.selling,
             buying: user.buying.map((el) => el && el._id),
             unreviewed: user.unreviewed,
-            reviewed: user.reviewed.map(el => el && el._id),
+            reviewed: user.reviewed.map((el) => el && el._id),
           });
         });
       } else {
@@ -59,6 +61,7 @@ export default async (req: Request, res: Response) => {
       }
     }
   } catch (err) {
+    logger.debug(`${__dirname} kakao/signup err message :: ${err.message}`);
     res.status(500).send({ message: '서버오류로 데이터를 불러오지 못했습니다.' });
   }
 };

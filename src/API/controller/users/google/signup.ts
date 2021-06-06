@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import UserModel from '../../../../models/user';
 import GoogleAuth from '../../../../service/google';
 import config from '../../../../config/key';
+import logger from '../../../../log/winston';
 
 export default async (req: Request, res: Response) => {
   const IdToken: string = req.headers.authorization?.split(' ')[1]!;
@@ -31,6 +32,7 @@ export default async (req: Request, res: Response) => {
           const newUser = new UserModel(userInfo);
           newUser.save(async (err, user) => {
             if (err) {
+              logger.debug(`${__dirname} google/signup err message :: ${err.message}`);
               return res.status(404).json({ message: "유저정보 저장에 실패했습니다." })
             }
             const chatRooms = (await UserModel.getchatRoomsByUserId(user._id)) || null;
@@ -56,6 +58,7 @@ export default async (req: Request, res: Response) => {
       }
     }
   } catch (err) {
+    logger.debug(`${__dirname} google/signup err message :: ${err.message}`);
     res.status(500).send({ message: '서버오류로 응답에 실패했습니다.' });
   }
 };

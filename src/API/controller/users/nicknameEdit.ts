@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import logger from '../../../log/winston';
 import UserModel from '../../../models/user';
 
 export default async (req: Request, res: Response) => {
@@ -14,9 +15,9 @@ export default async (req: Request, res: Response) => {
       }
     } else {
       res.status(406).json({ message: '이미 존재하는 닉네임입니다.' });
-
     }
   } catch (err) {
+    logger.debug(`${__dirname} users/nicknameEdit err message :: ${err.message}`);
     if (err.code === 11000) {
       res.status(406).json({ message: '이미 존재하는 닉네임입니다.' });
     } else {

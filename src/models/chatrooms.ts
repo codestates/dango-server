@@ -1,6 +1,7 @@
 import { Schema, model } from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
 import { IChatRoomDocument, IchatRoomModel } from '../@types/roomModels';
+import logger from '../log/winston';
 import UserModel from './user';
 
 const schema: Schema<IChatRoomDocument> = new Schema(
@@ -33,7 +34,7 @@ schema.statics.generateChatRooms = async function (userId: string, otherId: stri
     }
     return newRoom._id;
   } catch (err) {
-    console.log(err);
+    logger.debug(`${__dirname} generateChatRooms err message :: ${err.message}`);
   }
 };
 

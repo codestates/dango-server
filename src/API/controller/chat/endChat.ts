@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 import UserModel from '../../../models/user';
 import MessageModel from '../../../models/chatmessages';
 import ChatRoomModel from '../../../models/chatrooms';
+import logger from '../../../log/winston';
 
 export default async (req: Request, res: Response) => {
   const { userId, otherId, chatRoomId } = req.body;
@@ -20,6 +21,7 @@ export default async (req: Request, res: Response) => {
     res.send({ message: '채팅방 나가기에 성공했습니다. 거래가 종료되었습니다.' });
   } catch (err) {
     console.log(err);
+    logger.debug(`${__dirname} chats/endChat err message :: ${err.message}`);
     res.status(500).json({ message: '서버 응답에 실패했습니다.' });
   }
 };

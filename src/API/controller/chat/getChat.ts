@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import logger from '../../../log/winston';
 import MessageModel from '../../../models/chatmessages';
 
 export default async (req: Request, res: Response) => {
@@ -23,6 +24,7 @@ export default async (req: Request, res: Response) => {
       res.json({ message: '채팅 불러오기에 실패했습니다.' });
     }
   } catch (err) {
+    logger.debug(`${__dirname} chat/getChat err message :: ${err.message}`);
     res.status(500).json({ message: '서버 응답에 실패했습니다.' });
   }
 };

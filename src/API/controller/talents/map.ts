@@ -2,6 +2,7 @@ import { PopulatedTalent } from './../../../@types/index.d';
 import { Request, Response } from 'express';
 import TalentModel from '../../../models/talents';
 import solveMapWidth from '../../../utils/coordinates';
+import logger from '../../../log/winston';
 
 export default async (req: Request, res: Response) => {
   const [S, N]: number[] = req.body.width;
@@ -59,6 +60,7 @@ export default async (req: Request, res: Response) => {
     res.json({ result: changeRatings, message: '주변 데이터 불러오기에 성공했습니다.' });
   } catch (err) {
     console.log(err);
+    logger.debug(`${__dirname} talents/map err message :: ${err.message}`);
     res.json({ message: '서버 응답에 실패했습니다.' });
   }
 };

@@ -2,6 +2,7 @@ import { IMessageModel, IMessageDocument, MessageOptions } from '../@types/messa
 import { Schema, model, Types } from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
 import { ReadBy } from './../@types/index.d';
+import logger from '../log/winston';
 
 const readbySchema = new Schema<ReadBy>(
   {
@@ -113,7 +114,7 @@ messageSchema.statics.getMessagesByRoomId = async function (
       { $sort: { createdAt: 1 } },
     ]);
   } catch (err) {
-    console.log(err);
+    logger.debug(`${__dirname} getMessages err message :: ${err.message}`);
   }
 };
 // Need $push Test
@@ -181,7 +182,7 @@ messageSchema.statics.createPost = async function (
       return findWithPostedBy[0];
     }
   } catch (err) {
-    console.log(err);
+    logger.debug(`${__dirname} createPost err message :: ${err.message}`);
   }
 };
 /*

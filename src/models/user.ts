@@ -210,7 +210,7 @@ schema.statics.getchatRoomsByUserId = async function (userId: string) {
     ]);
     return result;
   } catch (err) {
-    console.log(err);
+    logger.debug(`${__dirname} getchatRooms err message :: ${err.message}`);
   }
 };
 
@@ -283,8 +283,7 @@ schema.statics.getTalents = async function (userId: string) {
       },
     ]);
   } catch (err) {
-    logger.debug(`${this.name} ${__dirname} ${err.message}`);
-
+    logger.debug(`${__dirname} getTalent err message :: ${err.message}`);
   }
 };
 

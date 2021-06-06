@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import logger from '../../../../log/winston';
 import UserModel from '../../../../models/user';
 import GoogleAuth from '../../../../service/google';
 
@@ -34,6 +35,7 @@ export default async (req: Request, res: Response) => {
       res.status(401).send({ message: '유효하지 않은 토큰입니다.' });
     }
   } catch (err) {
+    logger.debug(`${__dirname} google/signin err message :: ${err.message}`);
     res.status(500).send({ message: '서버 응답에 실패했습니다.' });
   }
 };

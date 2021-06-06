@@ -1,6 +1,7 @@
 import UserModel from '../models/user';
 import ChatRoomModel from '../models/chatrooms';
 import MessageModel from '../models/chatmessages';
+import logger from '../log/winston';
 
 export default async (talentId: string, userId: string, chatroomId: string) => {
   let buyerId = null;
@@ -46,6 +47,7 @@ export default async (talentId: string, userId: string, chatroomId: string) => {
       }
     }
   } catch (err) {
+    logger.debug(`${__dirname} finishdeal err message :: ${err.message}`);
     console.log(err);
   }
 };

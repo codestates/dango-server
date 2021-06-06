@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import logger from '../../../log/winston';
 import UserModel from '../../../models/user';
 
 export default async (req: Request, res: Response) => {
@@ -23,6 +24,7 @@ export default async (req: Request, res: Response) => {
       res.status(404).send({ message: '미가입된 회원입니다.' });
     }
   } catch (err) {
+    logger.debug(`${__dirname} users/withdraw err message :: ${err.message}`);
     res.status(500).send({ message: '서버응답에 실패했습니다.' });
   }
 };

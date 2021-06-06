@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import UserModel from '../../../models/user';
 import ChatRoomModel from '../../../models/chatrooms';
 import MessageModel from '../../../models/chatmessages';
+import logger from '../../../log/winston';
 
 export default async (req: Request, res: Response) => {
   const { talentId, userId, chatroomId } = req.body;
@@ -65,7 +66,8 @@ export default async (req: Request, res: Response) => {
       res.status(500).json({ message: '서버 응답에 실패했습니다.' });
     }
   } catch (err) {
-    console.log(err);
+    logger.debug(`${__dirname} users/finishdeal err message :: ${err.message}`);
+
     res.status(500).json({ message: '서버 응답에 실패했습니다.' });
   }
 };

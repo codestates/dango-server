@@ -1,6 +1,7 @@
 import { KakaoHeader } from './../@types/service.d';
 import axios, { AxiosResponse } from 'axios';
 import config from '../config/key';
+import logger from '../log/winston';
 
 export default class KakaoAuth {
   static async getTokenWithCode(code: string) {
@@ -21,7 +22,9 @@ export default class KakaoAuth {
       return await axios
         .post('https://kauth.kakao.com/oauth/token', queryString, { headers: kakaoHeader })
         .then((res: AxiosResponse) => res.data)
-        .catch((e) => e);
+        .catch((err) => {
+          logger.debug(`${__dirname} kakaoAuth/getToken err message :: ${err.message}`);
+        });
     };
   }
   static async getUserInfo(token: string) {
@@ -32,7 +35,9 @@ export default class KakaoAuth {
         },
       })
       .then((res: AxiosResponse) => res.data)
-      .catch((e) => e);
+      .catch((err) => {
+        logger.debug(`${__dirname} kakaoAuth/getUserInfo err message :: ${err.message}`);
+      });
   }
   static async signOut(token: string) {
     return axios
@@ -42,7 +47,9 @@ export default class KakaoAuth {
         },
       })
       .then((res: AxiosResponse) => res.data)
-      .catch((e) => e);
+      .catch((err) => {
+        logger.debug(`${__dirname} kakaoAuth/signout err message :: ${err.message}`);
+      });
   }
   static async withdraw(token: string) {
     return axios
@@ -54,7 +61,9 @@ export default class KakaoAuth {
       .then((res: AxiosResponse) => {
         return res.data;
       })
-      .catch((e) => e);
+      .catch((err) => {
+        logger.debug(`${__dirname} kakaoAuth/withdraw err message :: ${err.message}`);
+      });
   }
   static async validate(token: string) {
     return axios
@@ -66,6 +75,8 @@ export default class KakaoAuth {
       .then((res: AxiosResponse) => {
         return res.data;
       })
-      .catch((e) => e);
+      .catch((err) => {
+        logger.debug(`${__dirname} kakaoAuth/validate err message :: ${err.message}`);
+      });
   }
 }

@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 import UserModel from '../../../models/user';
 import GoogleAuth from '../../../service/google';
 import KakaoAuth from '../../../service/kakao';
+import logger from '../../../log/winston';
 
 export default async (req: Request, res: Response) => {
   const { social } = req.body;
@@ -30,6 +31,7 @@ export default async (req: Request, res: Response) => {
       }
     }
   } catch (err) {
+    logger.debug(`${__dirname} users/validate err message :: ${err.message}`);
     res.status(500).send({ message: '서버응답에 실패했습니다.' });
   }
 };
