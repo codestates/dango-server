@@ -69,8 +69,12 @@ class WebSockets {
           }
         },
       );
-      client.on('initChat', async (otherId: string, roomId: string) => {
-        const messageForm = await MessageModel.createPost(roomId, '', clientId, undefined, true);
+      client.on('initChat', async (otherId: string, roomId: string, isLeave: boolean) => {
+        const messageForm = isLeave
+          ? await MessageModel.createPost(roomId, '', clientId, undefined, false)
+          : await MessageModel.createPost(roomId, '', clientId, undefined, true);
+
+        console.log(messageForm);
         if (this.inchat.has(otherId)) {
           const otherSocketId = this.users.get(otherId);
           const otherClient = io.of('/').sockets.get(otherSocketId);

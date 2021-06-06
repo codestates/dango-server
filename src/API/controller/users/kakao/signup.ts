@@ -29,7 +29,7 @@ export default async (req: Request, res: Response) => {
             social: 'kakao',
             name: data.properties?.nickname,
             email: email,
-            image: data.kakao_account.profile?.thumbnail_image_url || config.defaultImage,
+            image: data.kakao_account.profile?.profile_image_url || config.defaultImage,
           },
         };
         const newUser = new UserModel(userInfo);
@@ -47,7 +47,7 @@ export default async (req: Request, res: Response) => {
             socialData: {
               social: 'kakao',
               email: email,
-              image: config.defaultImage,
+              image: userInfo.socialData.image || config.defaultImage,
             },
             chatRooms,
             selling: user.selling,
