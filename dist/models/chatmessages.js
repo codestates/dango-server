@@ -139,7 +139,7 @@ messageSchema.statics.createPost = function (roomId, message, postedBy, confirm,
             // 저장
             const createdResult = yield this.create({
                 roomId,
-                message: isStart ? '거래가 시작됐습니다.' : message,
+                message: isStart ? '거래가 시작됐습니다.' : isStart === false ? '상대방이 방을 떠났습니다.' : message,
                 type: confirm ? 'confirm' : isStart ? 'init' : 'text',
                 postedBy,
                 readBy: { readUser: postedBy },

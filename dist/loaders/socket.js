@@ -75,8 +75,11 @@ class WebSockets {
                         // io.sockets.in(`${otherId}${clientId}`).emit('messageFromOther', messageForm);
                     }
                 }));
-                client.on('initChat', (otherId, roomId) => __awaiter(this, void 0, void 0, function* () {
-                    const messageForm = yield chatmessages_1.default.createPost(roomId, '', clientId, undefined, true);
+                client.on('initChat', (otherId, roomId, isLeave) => __awaiter(this, void 0, void 0, function* () {
+                    const messageForm = isLeave
+                        ? yield chatmessages_1.default.createPost(roomId, '', clientId, undefined, false)
+                        : yield chatmessages_1.default.createPost(roomId, '', clientId, undefined, true);
+                    console.log(messageForm);
                     if (this.inchat.has(otherId)) {
                         const otherSocketId = this.users.get(otherId);
                         const otherClient = io.of('/').sockets.get(otherSocketId);

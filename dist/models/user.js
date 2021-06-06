@@ -208,6 +208,19 @@ schema.statics.getchatRoomsByUserId = function (userId) {
                         otherId: '$other._id',
                         otherNickname: '$other.nickname',
                         profileImage: '$other.socialData.image',
+                        otherIsJoined: {
+                            $function: {
+                                body: function (roomId, otherTalksArr) {
+                                    const result = otherTalksArr.find((el) => el[0] === roomId);
+                                    if (result) {
+                                        return true;
+                                    }
+                                    return false;
+                                },
+                                args: ['$roomId', '$other.talks'],
+                                lang: 'js',
+                            },
+                        },
                     },
                 },
                 {
@@ -217,6 +230,7 @@ schema.statics.getchatRoomsByUserId = function (userId) {
                         talks: 1,
                         count: 1,
                         clickPurchase: 1,
+                        otherIsJoined: 1,
                         otherId: { $arrayElemAt: ['$otherId', 0] },
                         otherNickname: { $arrayElemAt: ['$otherNickname', 0] },
                         profileImage: { $arrayElemAt: ['$profileImage', 0] },
