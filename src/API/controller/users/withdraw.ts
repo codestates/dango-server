@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import config from '../../../config/key';
 import logger from '../../../log/winston';
 import UserModel from '../../../models/user';
 
@@ -13,7 +14,7 @@ export default async (req: Request, res: Response) => {
           'socialData.id': Date.now(),
           'socialData.name': '알수 없음',
           'socialData.email': '',
-          'socialData.image': '',
+          'socialData.image': config.defaultImage,
         },
       },
     );

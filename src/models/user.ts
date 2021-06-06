@@ -195,8 +195,8 @@ schema.statics.getchatRoomsByUserId = async function (userId: string) {
           profileImage: '$other.socialData.image',
           otherIsJoined: {
             $function: {
-              body: function (roomId: string, otherTalksArr: string[]) {
-                const result = otherTalksArr.find((el) => el[0] === roomId);
+              body: function (roomId: string, otherTalksArr: [string[]]) {
+                const result = otherTalksArr[0].find((el) => el === roomId);
                 if (result) {
                   return true;
                 }
