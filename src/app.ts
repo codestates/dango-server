@@ -34,7 +34,7 @@ import TalentModel from './models/talents';
 app.get('/test', async (req: Request, res: Response) => {
   console.time('test');
   // const b = await MessageModel.updateReadBy('888a1fd92535469e82c7938d8aa7feb0', "60b899f9fe40231d9bf6c08c");
-  const b = await UserModel.getchatRoomsByUserId("60ba5a9633dbe13a7f41d301");
+  const b = await UserModel.getchatRoomsByUserId("60bca3dea0585a73adc3c92c");
   // const b = await MessageModel.aggregate([{ $match: { roomId: "33b62e0574984010b0dafeb868f4e033" } }]);
   // const b = await UserModel.getTalents("60b0c38a16391c2718926987")
   // const b = await TalentModel.updateOne(
