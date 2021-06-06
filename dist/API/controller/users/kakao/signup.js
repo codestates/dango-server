@@ -39,7 +39,7 @@ exports.default = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                         social: 'kakao',
                         name: (_b = data.properties) === null || _b === void 0 ? void 0 : _b.nickname,
                         email: email,
-                        image: ((_c = data.kakao_account.profile) === null || _c === void 0 ? void 0 : _c.thumbnail_image_url) || key_1.default.defaultImage,
+                        image: ((_c = data.kakao_account.profile) === null || _c === void 0 ? void 0 : _c.profile_image_url) || key_1.default.defaultImage,
                     },
                 };
                 const newUser = new user_1.default(userInfo);
@@ -57,7 +57,7 @@ exports.default = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                         socialData: {
                             social: 'kakao',
                             email: email,
-                            image: key_1.default.defaultImage,
+                            image: userInfo.socialData.image || key_1.default.defaultImage,
                         },
                         chatRooms,
                         selling: user.selling,

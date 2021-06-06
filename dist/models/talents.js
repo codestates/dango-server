@@ -34,6 +34,6 @@ const schema = new mongoose_1.Schema({
     category: { type: String, required: true },
     title: { type: String, required: true },
 });
-// schema.index({ location: '2dsphere' });
+schema.index({ location: '2dsphere' });
 const TalentModel = mongoose_1.model('talents', schema);
 exports.default = TalentModel;
