@@ -34,7 +34,7 @@ const schema = new Schema<Talent>({
   category: { type: String, required: true },
   title: { type: String, required: true },
 });
-// schema.index({ location: '2dsphere' });
+schema.index({ location: '2dsphere' });
 
 const TalentModel = model<Talent>('talents', schema);
 
