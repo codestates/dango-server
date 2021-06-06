@@ -21,11 +21,5 @@ exports.default = () => __awaiter(void 0, void 0, void 0, function* () {
         useUnifiedTopology: true,
         useFindAndModify: false,
     });
-    // const userdoc = new UserModel(fakeUser);
-    // const talentdoc = new TalentModel(fakeTalent);
-    // 테스트 데이터 생성시 아래 주석을 풀어주세요.
-    // 이제 create 요청으로 테스트데이터 만들 수 있습니다.
-    // await userdoc.save();
-    // await talentdoc.save();
     return connection.connection.db;
 });

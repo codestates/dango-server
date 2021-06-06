@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const user_1 = __importDefault(require("../../../models/user"));
 const google_1 = __importDefault(require("../../../service/google"));
 const kakao_1 = __importDefault(require("../../../service/kakao"));
+const winston_1 = __importDefault(require("../../../log/winston"));
 exports.default = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     const { social } = req.body;
@@ -46,6 +47,7 @@ exports.default = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         }
     }
     catch (err) {
+        winston_1.default.debug(`${__dirname} users/validate err message :: ${err.message}`);
         res.status(500).send({ message: '서버응답에 실패했습니다.' });
     }
 });

@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const user_1 = __importDefault(require("../../../../models/user"));
 const google_1 = __importDefault(require("../../../../service/google"));
 const key_1 = __importDefault(require("../../../../config/key"));
+const winston_1 = __importDefault(require("../../../../log/winston"));
 exports.default = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     const IdToken = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(' ')[1];
@@ -45,6 +46,7 @@ exports.default = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                     const newUser = new user_1.default(userInfo);
                     newUser.save((err, user) => __awaiter(void 0, void 0, void 0, function* () {
                         if (err) {
+                            winston_1.default.debug(`${__dirname} google/signup err message :: ${err.message}`);
                             return res.status(404).json({ message: "유저정보 저장에 실패했습니다." });
                         }
                         const chatRooms = (yield user_1.default.getchatRoomsByUserId(user._id)) || null;
@@ -72,6 +74,7 @@ exports.default = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         }
     }
     catch (err) {
+        winston_1.default.debug(`${__dirname} google/signup err message :: ${err.message}`);
         res.status(500).send({ message: '서버오류로 응답에 실패했습니다.' });
     }
 });

@@ -12,6 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const winston_1 = __importDefault(require("../../../log/winston"));
 const chatmessages_1 = __importDefault(require("../../../models/chatmessages"));
 exports.default = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const userId = req.body.id;
@@ -38,6 +39,7 @@ exports.default = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         }
     }
     catch (err) {
+        winston_1.default.debug(`${__dirname} chat/getChat err message :: ${err.message}`);
         res.status(500).json({ message: '서버 응답에 실패했습니다.' });
     }
 });

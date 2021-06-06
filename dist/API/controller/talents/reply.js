@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const talents_1 = __importDefault(require("../../../models/talents"));
 const user_1 = __importDefault(require("../../../models/user"));
+const winston_1 = __importDefault(require("../../../log/winston"));
 exports.default = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { talentId, userId, replyDescription, reviewId, replyDate } = req.body;
     try {
@@ -31,7 +32,8 @@ exports.default = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         }
     }
     catch (err) {
-        console.log(err);
+        winston_1.default.debug(`${__dirname} talents/reply err message :: ${err.message}`);
+        winston_1.default;
         res.status(500).json({ message: '서버 응답에 실패했습니다.' });
     }
 });

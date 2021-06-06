@@ -15,8 +15,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const user_1 = __importDefault(require("../../../../models/user"));
 const kakao_1 = __importDefault(require("../../../../service/kakao"));
 const key_1 = __importDefault(require("../../../../config/key"));
+const winston_1 = __importDefault(require("../../../../log/winston"));
 exports.default = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
+    var _a, _b, _c;
     const accessToken = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(' ')[1];
     const nickname = req.body.nickname;
     try {
@@ -36,15 +37,16 @@ exports.default = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                     socialData: {
                         id,
                         social: 'kakao',
-                        name: data.properties && data.properties.nickname,
+                        name: (_b = data.properties) === null || _b === void 0 ? void 0 : _b.nickname,
                         email: email,
-                        image: key_1.default.defaultImage,
+                        image: ((_c = data.kakao_account.profile) === null || _c === void 0 ? void 0 : _c.thumbnail_image_url) || key_1.default.defaultImage,
                     },
                 };
                 const newUser = new user_1.default(userInfo);
                 newUser.save((err, user) => __awaiter(void 0, void 0, void 0, function* () {
                     if (err) {
-                        return res.status(404).json({ message: "유저정보 저장에 실패했습니다." });
+                        winston_1.default.debug(`${__dirname} kakao/signup err message :: ${err.message}`);
+                        return res.status(404).json({ message: '유저정보 저장에 실패했습니다.' });
                     }
                     const chatRooms = (yield user_1.default.getchatRoomsByUserId(user._id)) || null;
                     res.send({
@@ -61,7 +63,7 @@ exports.default = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                         selling: user.selling,
                         buying: user.buying.map((el) => el && el._id),
                         unreviewed: user.unreviewed,
-                        reviewed: user.reviewed.map(el => el && el._id),
+                        reviewed: user.reviewed.map((el) => el && el._id),
                     });
                 }));
             }
@@ -71,6 +73,7 @@ exports.default = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         }
     }
     catch (err) {
+        winston_1.default.debug(`${__dirname} kakao/signup err message :: ${err.message}`);
         res.status(500).send({ message: '서버오류로 데이터를 불러오지 못했습니다.' });
     }
 });
