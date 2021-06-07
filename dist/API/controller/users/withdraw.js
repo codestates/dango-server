@@ -12,6 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const key_1 = __importDefault(require("../../../config/key"));
 const winston_1 = __importDefault(require("../../../log/winston"));
 const user_1 = __importDefault(require("../../../models/user"));
 exports.default = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -23,7 +24,7 @@ exports.default = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 'socialData.id': Date.now(),
                 'socialData.name': '알수 없음',
                 'socialData.email': '',
-                'socialData.image': '',
+                'socialData.image': key_1.default.defaultImage,
             },
         });
         if (data.nModified > 0) {

@@ -35,6 +35,7 @@ exports.default = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 else {
                     const userInfo = {
                         nickname,
+                        accessToken: IdToken,
                         socialData: {
                             id: userData.sub,
                             social: 'google',
@@ -47,7 +48,7 @@ exports.default = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                     newUser.save((err, user) => __awaiter(void 0, void 0, void 0, function* () {
                         if (err) {
                             winston_1.default.debug(`${__dirname} google/signup err message :: ${err.message}`);
-                            return res.status(404).json({ message: "유저정보 저장에 실패했습니다." });
+                            return res.status(404).json({ message: '유저정보 저장에 실패했습니다.' });
                         }
                         const chatRooms = (yield user_1.default.getchatRoomsByUserId(user._id)) || null;
                         res.status(200).send({
@@ -63,7 +64,7 @@ exports.default = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                             selling: user.selling,
                             buying: user.buying.map((el) => el && el._id),
                             unreviewed: user.unreviewed,
-                            reviewed: user.reviewed.map(el => el && el._id),
+                            reviewed: user.reviewed.map((el) => el && el._id),
                         });
                     }));
                 }
