@@ -211,7 +211,7 @@ schema.statics.getchatRoomsByUserId = function (userId) {
                         otherIsJoined: {
                             $function: {
                                 body: function (roomId, otherTalksArr) {
-                                    const result = otherTalksArr.find((el) => el[0] === roomId);
+                                    const result = otherTalksArr[0].find((el) => el === roomId);
                                     if (result) {
                                         return true;
                                     }

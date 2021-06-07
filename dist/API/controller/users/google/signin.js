@@ -29,6 +29,7 @@ exports.default = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 res.send({
                     message: '로그인에 성공했습니다.',
                     _id: result._id,
+                    accessToken: IdToken,
                     socialData: {
                         social,
                         email,
