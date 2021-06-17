@@ -1,15 +1,13 @@
-import dotenv from "dotenv";
+import dotenv from 'dotenv';
 
-process.env.NODE_ENV = process.env.NODE_ENV || "production";
+process.env.NODE_ENV = process.env.NODE_ENV || 'production';
 
 const envFound = dotenv.config({ path: __dirname + '/./../../.env' });
 
-
 if (envFound.error) {
-  // This error should crash whole process
-
-  throw new Error("check src/config/index.ts");
+  throw new Error('check src/config/index.ts');
 }
+
 export default {
   port: parseInt(process.env.PROD_PORT!),
   databaseURL: process.env.PROD_MONGO_URI,
@@ -23,5 +21,5 @@ export default {
   bucketRegion: process.env.PROD_AWS_BUCKET_REGION,
   bucketKeyId: process.env.PROD_AWS_ACCESS_KEY_ID,
   bucketAccessKey: process.env.PROD_AWS_SECRET_ACCESS_KEY,
-  bucketName: process.env.PROD_AWS_BUCKET_NAME
+  bucketName: process.env.PROD_AWS_BUCKET_NAME,
 };

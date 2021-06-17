@@ -1,10 +1,10 @@
 import dotenv from 'dotenv';
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
-const envFound = dotenv.config({ path: __dirname + '/./../../.env' });
-if (envFound.error) {
-  // This error should crash whole process
 
+const envFound = dotenv.config({ path: __dirname + '/./../../.env' });
+
+if (envFound.error) {
   throw new Error('check src/config/index.ts');
 }
 
@@ -21,5 +21,5 @@ export default {
   bucketRegion: process.env.AWS_BUCKET_REGION,
   bucketKeyId: process.env.AWS_ACCESS_KEY_ID,
   bucketAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  bucketName: process.env.AWS_BUCKET_NAME
+  bucketName: process.env.AWS_BUCKET_NAME,
 };

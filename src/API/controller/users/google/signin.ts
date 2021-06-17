@@ -26,17 +26,17 @@ export default async (req: Request, res: Response) => {
           selling: result.selling,
           buying: result.buying.map((el) => el && el._id),
           unreviewed: result.unreviewed,
-          reviewed: result.reviewed.map(el => el && el._id),
+          reviewed: result.reviewed.map((el) => el && el._id),
           nickname: result.nickname,
         });
       } else {
-        res.status(404).send({ message: '등록된 회원이 아닙니다.' });
+        res.status(404).json({ message: '등록된 회원이 아닙니다.' });
       }
     } else {
-      res.status(401).send({ message: '유효하지 않은 토큰입니다.' });
+      res.status(401).json({ message: '유효하지 않은 토큰입니다.' });
     }
   } catch (err) {
     logger.debug(`${__dirname} google/signin err message :: ${err.message}`);
-    res.status(500).send({ message: '서버 응답에 실패했습니다.' });
+    res.status(500).json({ message: '서버 응답에 실패했습니다.' });
   }
 };

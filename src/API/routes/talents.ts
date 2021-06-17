@@ -18,15 +18,3 @@ router.post('/review', createReview);
 router.post('/reply', createReply);
 
 export default router;
-
-/*
-'/talents/map'
-'/talents/preview'
-'/talents/create'
-'/talents/detail'-get
-
-'/talents/edit' - post
-'/talents/review/:talentId'-post
-'/talents/reply/:userId'-post
-
-*/

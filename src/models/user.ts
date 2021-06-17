@@ -1,4 +1,3 @@
-import { User } from './../@types/index.d';
 import { Schema, model, Types } from 'mongoose';
 import { IBuyingArr, IUserDocument, IUserModel } from '../@types/userModel';
 import logger from '../log/winston';

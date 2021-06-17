@@ -14,8 +14,6 @@ export default async (req: Request, res: Response) => {
      * talent의 ratings 업데이트
      * userId의 unreviewed 의 talentid에 존재하는 talentid 삭제
      * reviewed 에 talentid 등록
-     *
-     * 이것들 체크하려면 앞의 메소드 먼저 작성해야겠다.
      */
     const validUser = await UserModel.findOne({ _id: userId, unreviewed: talentId }).select('unreviewed').lean();
     if (validUser) {
@@ -33,14 +31,12 @@ export default async (req: Request, res: Response) => {
       )
         .select('reviews')
         .lean();
-      console.log('reviews', updatedResult);
       if (updatedResult) {
         const matchReview = updatedResult.reviews.find((el) => {
           if (el._id.toString() === userId && el.nickname === nickname && el.rating === rating) {
             return true;
           }
         });
-        console.log('matchReview', matchReview);
         if (matchReview) {
           await UserModel.updateOne(
             { _id: userId },
@@ -71,8 +67,3 @@ export default async (req: Request, res: Response) => {
     res.status(500).json({ message: '서버 응답에 실패했습니다.' });
   }
 };
-
-/**
- * 탤런트별 리뷰 여러개 존재
- *
- */

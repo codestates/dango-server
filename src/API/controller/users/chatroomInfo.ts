@@ -14,6 +14,6 @@ export default async (req: Request, res: Response) => {
   } catch (err) {
     logger.debug(`${__dirname} users/chatRoomInfo err message :: ${err.message}`);
 
-    res.status(500).send({ message: '서버응답에 실패했습니다.' });
+    res.status(500).json({ message: '서버응답에 실패했습니다.' });
   }
 };

@@ -29,7 +29,7 @@ export default async (req: Request, res: Response) => {
       res.json({
         ...result,
         images: result.images.map((url: string) => {
-          return url.replace('original', 'small')
+          return url.replace('original', 'small');
         }),
         reviews: newReviews,
         ratings: [result.ratings[0] === 0 ? 0 : result.ratings[0] / result.ratings[1], result.ratings[1]],

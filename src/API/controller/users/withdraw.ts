@@ -20,13 +20,13 @@ export default async (req: Request, res: Response) => {
     );
 
     if (data.nModified > 0) {
-      res.send({ message: '회원 탈퇴에 성공했습니다.' });
+      res.json({ message: '회원 탈퇴에 성공했습니다.' });
     } else {
-      res.status(404).send({ message: '미가입된 회원입니다.' });
+      res.status(404).json({ message: '미가입된 회원입니다.' });
     }
   } catch (err) {
     logger.debug(`${__dirname} users/withdraw err message :: ${err.message}`);
-    res.status(500).send({ message: '서버응답에 실패했습니다.' });
+    res.status(500).json({ message: '서버응답에 실패했습니다.' });
   }
 };
 // 닉네임
