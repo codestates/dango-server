@@ -1,4 +1,3 @@
-import { PopulatedTalent } from './../../../@types/index.d';
 import { Request, Response } from 'express';
 import TalentModel from '../../../models/talents';
 import solveMapWidth from '../../../utils/coordinates';
@@ -9,7 +8,7 @@ export default async (req: Request, res: Response) => {
   const [lat, lon]: number[] = req.body.location; // 쿼리 보낼땐 반대로
   const categorys: string[] = req.body.category || [''];
   const sort: 'price' | 'ratings' | 'review' | undefined = req.body.sort;
-  const finalSort = sort === 'price' ? 'price' : sort === 'ratings' ? '-ratings.0' : '-ratings.1' || 'location';
+  // const finalSort = sort === 'price' ? 'price' : sort === 'ratings' ? '-ratings.0' : '-ratings.1' || 'location';
   const width = solveMapWidth([S, N]);
   try {
     const previewsArr = await TalentModel.find({
@@ -28,9 +27,7 @@ export default async (req: Request, res: Response) => {
         }),
       })
       .populate({ path: 'userInfo', select: 'nickname' })
-      // .select('location ratings category title price')
       .select('-__v -reviews -images ')
-      // .sort(`${finalSort}`)
       .lean();
     const sortedArr =
       sort === 'price'

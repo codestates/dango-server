@@ -10,15 +10,14 @@ export default async (req: Request, res: Response) => {
   try {
     /**
      * userId의 selling에 talentid가 있는지 확인 :::
-     * true? 구매자임
-     * false? 판매자임
+     * true? 구매자
+     * false? 판매자
      * 구매자인 경우 buying의 목록들 중 talentid를 가지고 있는 목록을 찾아서 confirmed update
      *            채팅빙의 메세지에 type:confirmed 추가
      * 판매자인 경우 채팅방을 만든 id의 buying 목록의 talentid를 가진 confirmed 배열에 추가
      *            채팅빙의 메세지에 type:confirmed 추가
-     * 그런데 confirmed배열에 이미 한명이 존재할 경우엔 거래를 끝내야 함
-     * 이 경우 users의 buying의 talentid에 해당하는 목록을 삭제하고 그 아이디를 unreviewed에 추가해야 됨
-     *
+     * confirmed배열에 이미 한명이 존재할 경우엔 거래를 끝냄
+     * 이 경우 users의 buying의 talentid에 해당하는 목록을 삭제하고 그 아이디를 unreviewed에 추가
      */
 
     const isSeller = await UserModel.find({ _id: userId, selling: talentId }).select('nickname').lean();

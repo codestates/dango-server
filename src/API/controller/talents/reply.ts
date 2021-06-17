@@ -1,4 +1,3 @@
-import { CreateTalent } from './../../../@types/request.d';
 import { Request, Response } from 'express';
 import TalentModel from '../../../models/talents';
 import UserModel from '../../../models/user';

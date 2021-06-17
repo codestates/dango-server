@@ -20,4 +20,3 @@ export default async (req: Request, res: Response) => {
     }
   }
 };
-// 위치, 카테고리, 닉네임,  별점 평균, 가격, 글 제목, 글 내용, 지역

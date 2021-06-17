@@ -17,7 +17,7 @@ export default async (req: Request, res: Response) => {
           res.json({ message: '유효한 유저입니다.' });
         }
       } else {
-        res.status(401).send({ message: '유효하지 않은 토큰입니다.' });
+        res.status(401).json({ message: '유효하지 않은 토큰입니다.' });
       }
     } else if (social === 'kakao') {
       const kakaoResult: KakaoUserInfo = await KakaoAuth.validate(token);
@@ -27,11 +27,11 @@ export default async (req: Request, res: Response) => {
           res.json({ message: '유효한 유저입니다.' });
         }
       } else {
-        res.status(401).send({ message: '유효하지 않은 토큰입니다.' });
+        res.status(401).json({ message: '유효하지 않은 토큰입니다.' });
       }
     }
   } catch (err) {
     logger.debug(`${__dirname} users/validate err message :: ${err.message}`);
-    res.status(500).send({ message: '서버응답에 실패했습니다.' });
+    res.status(500).json({ message: '서버응답에 실패했습니다.' });
   }
 };

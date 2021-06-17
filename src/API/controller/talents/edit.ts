@@ -11,7 +11,7 @@ export default async (req: Request, res: Response) => {
     // 판매자이면  데이터 변경
     const seller = await UserModel.findOne({ _id: userId, selling: talentId }).select('userId').lean();
     if (seller) {
-      // 판매자임
+      // 판매자
       const result = await TalentModel.findOneAndUpdate(
         { _id: talentId },
         { $set: { description, price, category, title } },
@@ -28,5 +28,3 @@ export default async (req: Request, res: Response) => {
     res.status(500).json({ message: '서버 응답에 실패했습니다.' });
   }
 };
-
-//description, price, category, title

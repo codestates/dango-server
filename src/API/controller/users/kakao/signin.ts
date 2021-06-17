@@ -9,7 +9,7 @@ export default async (req: Request, res: Response) => {
     // 유저정보 받아오고
     const data = await KakaoAuth.getUserInfo(accessToken);
     // DB에 id가 있는지 확인
-    const result = await UserModel.findOne({ 'socialData.id': data.id })
+    const result = await UserModel.findOne({ 'socialData.id': data.id });
     // 데이터가 있으면 토큰과 닉네임 보내준다.
     if (result) {
       const { social, email, image } = result.socialData;
@@ -25,9 +25,9 @@ export default async (req: Request, res: Response) => {
         },
         chatRooms,
         selling: result.selling,
-        buying: result.buying.map(el => el && el._id),
+        buying: result.buying.map((el) => el && el._id),
         unreviewed: result.unreviewed,
-        reviewed: result.reviewed.map(el => el && el._id),
+        reviewed: result.reviewed.map((el) => el && el._id),
         nickname: result.nickname,
       });
     } else {

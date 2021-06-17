@@ -1,4 +1,3 @@
-import { Schema } from 'mongoose';
 import { Request, Response } from 'express';
 import UserModel from '../../../models/user';
 import logger from '../../../log/winston';
@@ -35,7 +34,7 @@ export default async (req: Request, res: Response) => {
       );
       res.json({ message: '데이터 응답에 성공했습니다.', data: devided });
     } else {
-      res.json({ m: '' });
+      res.json({ messgae: '유효하지 않은 유저입니다.' });
     }
   } catch (err) {
     logger.debug(`${__dirname} users/mypage err message :: ${err.message}`);

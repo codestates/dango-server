@@ -1,7 +1,7 @@
 module.exports = {
   apps: [
     {
-      name: 'myapp',
+      name: 'dango',
       script: './dist/bin/www.js',
       watch: true,
       env: {

@@ -185,19 +185,6 @@ messageSchema.statics.createPost = async function (
     logger.debug(`${__dirname} createPost err message :: ${err.message}`);
   }
 };
-/*
-{
-  _id: 'a4dc151a4bb44733a9699b60c7e54e4b',
-  type: 'text',
-  message: '2203',
-  createdAt: '2021-05-22T11:58:57.235Z',
-  postedBy: {
-    _id: '609ec5a42b6cd4396e5d2bcf',
-    nickname: 'SYH',
-    image: 'https://placeimg.com/120/120/people/grayscale',
-  },
-};
-*/
+
 const MessageModel = model<IMessageDocument, IMessageModel>('messages', messageSchema);
-// const ReadByModel = model<ReadBy>('chatrooms', readbySchema); : 도큐먼트에 저장 안함?
 export default MessageModel;
